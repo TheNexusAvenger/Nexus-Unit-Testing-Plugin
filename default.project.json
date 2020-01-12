@@ -1,0 +1,49 @@
+{
+	"name": "Repository",
+	"servePort": 8000,
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"NexusUnitTestingPlugin": {
+                "$path": "src",
+                "NexusUnitTesting": {
+                    "$path": "module/Nexus-Unit-Testing/src",
+                    "NexusInstance": {
+                        "$path": "module/Nexus-Unit-Testing/module/Nexus-Instance/src"
+                    },
+                    "NexusProject": {
+                        "$path": "module/Nexus-Unit-Testing/module/Nexus-Project/src",
+                        "NexusInstance": {
+                            "$path": "module/Nexus-Unit-Testing/module/Nexus-Instance/src"
+                        }
+                    },
+                    "TestEZ": {
+                        "$path": "module/Nexus-Unit-Testing/module/TestEZ/lib"
+                    }
+                },
+                "NexusPluginFramework": {
+                    "$path": "module/Nexus-Plugin-Framework/src",
+                    "NexusInstance": {
+                        "$path": "module/Nexus-Plugin-Framework/module/Nexus-Instance/src"
+                    },
+                    "NexusProject": {
+                        "$path": "module/Nexus-Plugin-Framework/module/Nexus-Project/src",
+                        "NexusInstance": {
+                            "$path": "module/Nexus-Plugin-Framework/module/Nexus-Instance/src"
+                        }
+                    }
+                },
+                "NexusProject": {
+                    "$path": "module/Nexus-Project/src",
+                    "NexusInstance": {
+                        "$path": "module/Nexus-Project/module/Nexus-Instance/src"
+                    }
+                }
+            },
+            "NexusUnitTestingPluginTests": {
+                "$path": "test"
+            }
+		}
+	}
+}
