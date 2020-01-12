@@ -1,0 +1,6 @@
+[submodule "module/Nexus-Plugin-Framework"]
+	path = module/Nexus-Plugin-Framework
+	url = https://github.com/TheNexusAvenger/Nexus-Plugin-Framework.git
+[submodule "module/Nexus-Unit-Testing"]
+	path = module/Nexus-Unit-Testing
+	url = https://github.com/TheNexusAvenger/Nexus-Unit-Testing.git
