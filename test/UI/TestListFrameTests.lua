@@ -25,6 +25,7 @@ NexusUnitTesting:RegisterUnitTest("CombinedStateTest",function(UnitTest)
 	
 	--Change the combined state and assert the icon changes.
 	Test.CombinedState = "PASSED"
+	UnitTest:AssertEquals(CuT.Name,"Test test","Frame name is incorrect.")
 	UnitTest:AssertEquals(Icon.ImageRectOffset,Vector2.new(512,0),"Icon is not correct.")
 end)
 

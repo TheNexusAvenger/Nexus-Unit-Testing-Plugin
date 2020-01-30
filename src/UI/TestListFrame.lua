@@ -1,7 +1,7 @@
 --[[
 TheNexusAvenger
 
-Icon for showing the state of a test.
+Frame for showing and selecting tests.
 --]]
 
 local NexusUnitTestingPluginProject = require(script.Parent.Parent)
@@ -62,6 +62,7 @@ function TestListFrame:__new(Test)
 	end)
 	
 	--Set the defaults.
+	self.Name = Test.Name
 	self.Size = UDim2.new(1,0,0,20)
 end
 
