@@ -7,7 +7,7 @@ Frame containing the progress of the tests.
 local NexusUnitTestingPluginProject = require(script.Parent.Parent)
 local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
-local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTesting")
+local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
 
 local TestProgressBar = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance"):Extend()
 TestProgressBar:SetClassName("TestProgressBar")

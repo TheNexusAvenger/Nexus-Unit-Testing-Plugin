@@ -7,7 +7,7 @@
 			"$className": "ReplicatedStorage",
 			"NexusUnitTestingPlugin": {
                 "$path": "src",
-                "NexusUnitTesting": {
+                "NexusUnitTestingModule": {
                     "$path": "module/Nexus-Unit-Testing/src",
                     "NexusInstance": {
                         "$path": "module/Nexus-Unit-Testing/module/Nexus-Instance/src"
@@ -19,7 +19,7 @@
                         }
                     },
                     "TestEZ": {
-                        "$path": "module/Nexus-Unit-Testing/module/TestEZ/lib"
+                        "$path": "_module/Nexus-Unit-Testing/module/TestEZ/lib"
                     }
                 },
                 "NexusPluginFramework": {

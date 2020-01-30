@@ -8,7 +8,7 @@ local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusUnitTestingPlugin = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusUnitTestingPlugin"))
 local TestProgressBar = NexusUnitTestingPlugin:GetResource("UI.TestProgressBar")
-local UnitTestClass = NexusUnitTestingPlugin:GetResource("NexusUnitTesting.UnitTest.UnitTest")
+local UnitTestClass = NexusUnitTestingPlugin:GetResource("NexusUnitTestingModule.UnitTest.UnitTest")
 
 
 
