@@ -7,7 +7,7 @@ Tests the TestProgressBar class.
 local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusUnitTestingPlugin = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusUnitTestingPlugin"))
-local TestProgressBar = NexusUnitTestingPlugin:GetResource("UI.TestProgressBar")
+local TestProgressBar = NexusUnitTestingPlugin:GetResource("UI.Bar.TestProgressBar")
 local UnitTestClass = NexusUnitTestingPlugin:GetResource("NexusUnitTestingModule.UnitTest.UnitTest")
 
 
