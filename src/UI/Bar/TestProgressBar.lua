@@ -37,8 +37,9 @@ function TestProgressBar:__new()
 	
 	--Create the bars.
 	local BarBackground = NexusPluginFramework.new("Frame")
-	BarBackground.Size = UDim2.new(1,-32,0,18)
+	BarBackground.Size = UDim2.new(1,-35,0,18)
 	BarBackground.Position = UDim2.new(0,30,0,5)
+	BarBackground.BorderSizePixel = 1
 	BarBackground.Parent = self
 	
 	local PassedBar = NexusPluginFramework.new("Frame")
