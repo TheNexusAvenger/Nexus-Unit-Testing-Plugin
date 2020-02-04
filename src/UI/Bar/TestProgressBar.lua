@@ -108,6 +108,7 @@ function TestProgressBar:__new()
 	self.SkippedTotalLabel = SkippedTotalLabel
 	
 	--Set the defaults.
+	self.BorderSizePixel = 1
 	self.Size = UDim2.new(1,0,0,28)
 end
 
