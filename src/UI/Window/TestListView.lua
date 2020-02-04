@@ -71,12 +71,24 @@ function TestListView:__new()
 	self.TestScrollingListFrame = ScrollFrame
 	
 	--Connect the events.
+	local DB = true
 	SideBar.RunTestsButton.MouseButton1Down:Connect(function()
-		self:RunAllTests()
+		if DB then
+			DB = false
+			self:RunAllTests()
+			
+			wait()
+			DB = true
+		end
 	end)
 	SideBar.RunFailedTestsButton.MouseButton1Down:Connect(function()
-		warn("Rerrunning failed tests is not implemented")
-		self:RunFailedTests()
+		if DB then
+			DB = false
+			warn("Rerrunning failed tests is not implemented")
+			self:RunFailedTests()
+			
+			DB = true
+		end
 	end)
 	
 	--Set the defaults.
