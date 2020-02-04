@@ -22,6 +22,18 @@ function PluginToggleButton:__new(Toolbar,ButtonName,ButtonTooltip,ButtonIcon,Pl
 		self.Active = PluginGui.Enabled
 	end)
 	
+	--Set up toggling the PluginGui.
+	local DB = true
+	self.Click:Connect(function()
+		if DB then
+			DB = false
+			PluginGui.Enabled = not PluginGui.Enabled
+			
+			wait()
+			DB = true
+		end
+	end)
+	
 	--Set the default.
 	self.Active = PluginGui.Enabled
 end
