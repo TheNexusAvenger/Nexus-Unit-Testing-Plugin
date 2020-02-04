@@ -7,7 +7,7 @@ Tests the TestListFrame class.
 local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusUnitTestingPlugin = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusUnitTestingPlugin"))
-local TestListFrame = NexusUnitTestingPlugin:GetResource("UI.TestListFrame")
+local TestListFrame = NexusUnitTestingPlugin:GetResource("UI.List.TestListFrame")
 local UnitTestClass = NexusUnitTestingPlugin:GetResource("NexusUnitTestingModule.UnitTest.UnitTest")
 
 

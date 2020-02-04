@@ -7,7 +7,7 @@ Tests the TestScrollingListFrame class.
 local NexusUnitTesting = require("NexusUnitTesting")
 
 local NexusUnitTestingPlugin = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusUnitTestingPlugin"))
-local TestScrollingListFrame = NexusUnitTestingPlugin:GetResource("UI.TestScrollingListFrame")
+local TestScrollingListFrame = NexusUnitTestingPlugin:GetResource("UI.List.TestScrollingListFrame")
 local NexusPluginFramework = NexusUnitTestingPlugin:GetResource("NexusPluginFramework")
 
 

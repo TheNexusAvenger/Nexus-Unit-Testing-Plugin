@@ -4,7 +4,7 @@ TheNexusAvenger
 Frame for showing and selecting tests.
 --]]
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent)
+local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
 

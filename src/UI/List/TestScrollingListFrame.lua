@@ -4,8 +4,7 @@ TheNexusAvenger
 Displays a list of tests.
 --]]
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent)
-local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
+local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
 
 local TestScrollingListFrame = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.UI.Scroll.NexusScrollingFrame"):Extend()
