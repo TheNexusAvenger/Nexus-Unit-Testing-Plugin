@@ -1,7 +1,7 @@
 --[[
 TheNexusAvenger
 
-Frave for the list of tests and actions.
+Frame for the list of tests and actions.
 --]]
 
 local SERVICES_WITH_TESTS = {
