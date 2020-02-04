@@ -30,15 +30,15 @@ function TestProgressBar:__new()
 	local Icon = TestStateIcon.new()
 	Icon.Hidden = true
 	Icon.Size = UDim2.new(0,16,0,16)
-	Icon.Position = UDim2.new(0,6,0,6)
+	Icon.Position = UDim2.new(0,6,0,8)
 	Icon.Parent = self
 	self:__SetChangedOverride("Icon",function() end)
 	self.Icon = Icon
 	
 	--Create the bars.
 	local BarBackground = NexusPluginFramework.new("Frame")
-	BarBackground.Size = UDim2.new(1,-35,0,18)
-	BarBackground.Position = UDim2.new(0,30,0,5)
+	BarBackground.Size = UDim2.new(1,-32,0,6)
+	BarBackground.Position = UDim2.new(0,30,0,2)
 	BarBackground.BorderSizePixel = 1
 	BarBackground.Parent = self
 	
@@ -51,19 +51,6 @@ function TestProgressBar:__new()
 	self:__SetChangedOverride("PassedBar",function() end)
 	self.PassedBar = PassedBar
 	
-	local PassedTotalLabel = NexusPluginFramework.new("TextLabel")
-	PassedTotalLabel.Hidden = true
-	PassedTotalLabel.Size = UDim2.new(1,-8,0,16)
-	PassedTotalLabel.Position = UDim2.new(0,4,0,1)
-	PassedTotalLabel.Text = "0"
-	PassedTotalLabel.TextSize = 16
-	PassedTotalLabel.Font = "SourceSansBold"
-	PassedTotalLabel.TextStrokeColor3 = Color3.new(0,0,0)
-	PassedTotalLabel.TextStrokeTransparency = 0
-	PassedTotalLabel.Parent = PassedBar
-	self:__SetChangedOverride("PassedTotalLabel",function() end)
-	self.PassedTotalLabel = PassedTotalLabel
-	
 	local FailedBar = NexusPluginFramework.new("Frame")
 	FailedBar.Size = UDim2.new(0,0,0,0)
 	FailedBar.BorderSizePixel = 0
@@ -72,19 +59,6 @@ function TestProgressBar:__new()
 	FailedBar.Parent = BarBackground
 	self:__SetChangedOverride("FailedBar",function() end)
 	self.FailedBar = FailedBar
-	
-	local FailedTotalLabel = NexusPluginFramework.new("TextLabel")
-	FailedTotalLabel.Hidden = true
-	FailedTotalLabel.Size = UDim2.new(1,-8,0,16)
-	FailedTotalLabel.Position = UDim2.new(0,4,0,1)
-	FailedTotalLabel.Text = "0"
-	FailedTotalLabel.TextSize = 16
-	FailedTotalLabel.Font = "SourceSansBold"
-	FailedTotalLabel.TextStrokeColor3 = Color3.new(0,0,0)
-	FailedTotalLabel.TextStrokeTransparency = 0
-	FailedTotalLabel.Parent = FailedBar
-	self:__SetChangedOverride("FailedTotalLabel",function() end)
-	self.FailedTotalLabel = FailedTotalLabel
 	
 	local SkippedBar = NexusPluginFramework.new("Frame")
 	SkippedBar.Size = UDim2.new(0,0,0,0)
@@ -95,18 +69,14 @@ function TestProgressBar:__new()
 	self:__SetChangedOverride("SkippedBar",function() end)
 	self.SkippedBar = SkippedBar
 	
-	local SkippedTotalLabel = NexusPluginFramework.new("TextLabel")
-	SkippedTotalLabel.Hidden = true
-	SkippedTotalLabel.Size = UDim2.new(1,-8,0,16)
-	SkippedTotalLabel.Position = UDim2.new(0,4,0,1)
-	SkippedTotalLabel.Text = "0"
-	SkippedTotalLabel.TextSize = 16
-	SkippedTotalLabel.Font = "SourceSansBold"
-	SkippedTotalLabel.TextStrokeColor3 = Color3.new(0,0,0)
-	SkippedTotalLabel.TextStrokeTransparency = 0
-	SkippedTotalLabel.Parent = SkippedBar
-	self:__SetChangedOverride("SkippedTotalLabel",function() end)
-	self.SkippedTotalLabel = SkippedTotalLabel
+	local TotalsTextLabel = NexusPluginFramework.new("TextLabel")
+	TotalsTextLabel.Hidden = true
+	TotalsTextLabel.Size = UDim2.new(1,-32,0,16)
+	TotalsTextLabel.Position = UDim2.new(0,30,0,10)
+	TotalsTextLabel.Text = "0"
+	TotalsTextLabel.Parent = self
+	self:__SetChangedOverride("TotalsTextLabel",function() end)
+	self.TotalsTextLabel = TotalsTextLabel
 	
 	--Set the defaults.
 	self.BorderSizePixel = 1
@@ -146,10 +116,10 @@ function TestProgressBar:UpdateProgressBar()
 		self.Icon.TestState = NexusUnitTesting.TestState.NotRun
 	end
 	
+	--Update the text.
+	self.TotalsTextLabel.Text = tostring(PassedTests).." passed, "..tostring(FailedTests).." failed, "..tostring(SkippedTests).." skipped ("..tostring(TotalTests).." total)"
+	
 	--Update the sizes.
-	self.PassedTotalLabel.Text = tostring(PassedTests)
-	self.FailedTotalLabel.Text = tostring(FailedTests)
-	self.SkippedTotalLabel.Text = tostring(SkippedTests)
 	self.PassedBar.Size = UDim2.new(PassedTests/TotalTests,0,1,0)
 	self.FailedBar.Size = UDim2.new(FailedTests/TotalTests,0,1,0)
 	self.SkippedBar.Size = UDim2.new(SkippedTests/TotalTests,0,1,0)
