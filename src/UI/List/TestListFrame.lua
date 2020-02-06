@@ -53,6 +53,7 @@ function TestListFrame:__new(Test)
 	--Create the list constraint.
 	local UIListLayout = NexusPluginFramework.new("UIListLayout")
 	UIListLayout.Hidden = true
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 	UIListLayout.Parent = self:GetCollapsableContainer()
 	
 	--Add the existing subtests.
