@@ -11,6 +11,7 @@ local TestListWindow = NexusUnitTestingPluginProject:GetResource("UI.Window.Test
 
 
 --Create the window.
+NexusPluginFramework:SetPlugin(plugin)
 local TestsLists = TestListWindow.new()
 
 --Create the button.

@@ -42,6 +42,10 @@ Creates a Test List Frame object.
 function TestListView:__new()
 	self:InitializeSuper("Frame")
 	
+	--Store the plugin.
+	self:__SetChangedOverride("Plugin",function() end)
+	self.Plugin = NexusPluginFramework:GetPlugin()
+	
 	--Set up storing the list frames references.
 	self:__SetChangedOverride("ModuleScriptTestFrames",function() end)
 	self.ModuleScriptTestFrames = {}
@@ -104,6 +108,7 @@ function TestListView:RunAllTests()
 	for _,Service in pairs(SERVICES_WITH_TESTS) do
 		for _,Test in pairs(TestFinder.GetTests(Service)) do
 			table.insert(Tests,Test)
+			Test.Overrides["plugin"] = self.Plugin
 		end
 	end
 	
@@ -139,7 +144,9 @@ Registers a ModuleScript unit test.
 function TestListView:RegisterTest(ModuleScriptTest)
 	--Remove the existing frame if it exists.
 	if self.ModuleScriptTestFrames[ModuleScriptTest.ModuleScript] then
-		self.ModuleScriptTestFrames[ModuleScriptTest.ModuleScript]:Destroy()
+		local ExistingListFrame = self.ModuleScriptTestFrames[ModuleScriptTest.ModuleScript]
+		self.TestProgressBar:RemoveUnitTest(ExistingListFrame.Test,true)
+		ExistingListFrame:Destroy()
 	end
 	
 	--Create the list frame.
