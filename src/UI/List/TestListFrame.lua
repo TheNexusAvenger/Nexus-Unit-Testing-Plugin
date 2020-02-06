@@ -7,9 +7,12 @@ Frame for showing and selecting tests.
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
+local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
 
 local TestListFrame = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.UI.CollapsableList.NexusCollapsableListFrame"):Extend()
 TestListFrame:SetClassName("TestListFrame")
+
+local TextService = game:GetService("TextService")
 
 
 
@@ -31,13 +34,21 @@ function TestListFrame:__new(Test)
 	Icon.TestState = Test.CombinedState
 	Icon.Parent = self:GetMainContainer()
 	
-	--Create the text for the test name.
+	--Create the text for the test name and time.
 	local TestNameLabel = NexusPluginFramework.new("TextLabel")
 	TestNameLabel.Hidden = true
 	TestNameLabel.Size = UDim2.new(1,-24,0,16)
 	TestNameLabel.Position = UDim2.new(0,22,0,1)
 	TestNameLabel.Text = Test.Name
 	TestNameLabel.Parent = self:GetMainContainer()
+	
+	local TestTimeLabel = NexusPluginFramework.new("TextLabel")
+	TestTimeLabel.Hidden = true
+	TestTimeLabel.Size = UDim2.new(1,-24,0,16)
+	TestTimeLabel.Position = UDim2.new(0,22 + 4 + TextService:GetTextSize(Test.Name,TestNameLabel.TextSize,TestNameLabel.Font,Vector2.new(2000,16)).X,0,1)
+	TestTimeLabel.TextColor3 = "SubText"
+	TestTimeLabel.Text = ""
+	TestTimeLabel.Parent = self:GetMainContainer()
 	
 	--Create the list constraint.
 	local UIListLayout = NexusPluginFramework.new("UIListLayout")
@@ -51,8 +62,15 @@ function TestListFrame:__new(Test)
 	end
 	
 	--Connect changing the test state.
+	local TestStartTime = 0
 	Test:GetPropertyChangedSignal("CombinedState"):Connect(function()
 		Icon.TestState = Test.CombinedState
+		
+		if Test.CombinedState == NexusUnitTesting.TestState.InProgress then
+			TestStartTime = tick()
+		elseif Test.CombinedState ~= NexusUnitTesting.TestState.NotRun then
+			TestTimeLabel.Text = string.format("%.3f",tick() - TestStartTime).." seconds"
+		end
 	end)
 	
 	--Connect tests being added.
