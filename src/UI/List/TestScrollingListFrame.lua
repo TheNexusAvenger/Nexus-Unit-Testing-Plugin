@@ -29,7 +29,13 @@ function TestScrollingListFrame:__new()
 	local SelectionConstraint = NexusPluginFramework.new("ListSelectionConstraint")
 	self.ChildAdded:Connect(function(Child)
 		if Child:IsA("TestListFrame") then
+			--Add the list frame.
 			SelectionConstraint:AddListFrame(Child)
+			
+			--Sort the frames.
+			SelectionConstraint:SortListFrames(function(ListFrameA,ListFrameB)
+				return ListFrameA.Test.Name < ListFrameB.Test.Name
+			end)
 		end
 	end)
 	self.ChildRemoved:Connect(function(Child)
