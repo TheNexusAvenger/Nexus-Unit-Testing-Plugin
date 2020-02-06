@@ -25,6 +25,19 @@ function TestScrollingListFrame:__new()
 	UIListLayout.SortOrder = Enum.SortOrder.Name
 	UIListLayout.Parent = self
 	
+	--Add the selection constraint.
+	local SelectionConstraint = NexusPluginFramework.new("ListSelectionConstraint")
+	self.ChildAdded:Connect(function(Child)
+		if Child:IsA("TestListFrame") then
+			SelectionConstraint:AddListFrame(Child)
+		end
+	end)
+	self.ChildRemoved:Connect(function(Child)
+		if Child:IsA("TestListFrame") then
+			SelectionConstraint:RemoveListFrame(Child)
+		end
+	end)
+	
 	--Set up updating the canvas size.
 	UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 		self.CanvasSize = UDim2.new(0,0,0,UIListLayout.AbsoluteContentSize.Y)
