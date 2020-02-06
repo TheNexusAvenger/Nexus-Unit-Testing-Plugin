@@ -112,6 +112,11 @@ function TestListView:RunAllTests()
 		end
 	end
 	
+	--Sort the tests.
+	table.sort(Tests,function(TestA,TestB)
+		return TestA.Name < TestB.Name
+	end)
+	
 	--Register the tests.
 	for _,Test in pairs(Tests) do
 		self:RegisterTest(Test)
