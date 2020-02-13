@@ -29,6 +29,7 @@ local TestProgressBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.TestPr
 local TestListFrameTests = NexusUnitTestingPluginProject:GetResource("UI.List.TestListFrame")
 local TestScrollingListFrame = NexusUnitTestingPluginProject:GetResource("UI.List.TestScrollingListFrame")
 local TestFinder = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.Runtime.TestFinder")
+local ModuleUnitTest = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.Runtime.ModuleUnitTest")
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
 
 local TestListView = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance"):Extend()
@@ -86,7 +87,6 @@ function TestListView:__new()
 	SideBar.RunFailedTestsButton.MouseButton1Down:Connect(function()
 		if DB then
 			DB = false
-			warn("Rerrunning failed tests is not implemented")
 			delay(0.1,function() DB = true end)
 			self:RunFailedTests()
 		end
@@ -100,9 +100,6 @@ end
 Runs all of the detected tests.
 --]]
 function TestListView:RunAllTests()
-	--Set the test time.
-	self.TestProgressBar:SetTime()
-	
 	--Find the tests to run.
 	local Tests = {}
 	local Modules = {}
@@ -146,13 +143,39 @@ function TestListView:RunFailedTests()
 		return
 	end
 	
-	--TODO: Implement
+	--Determine the ModuleScripts to rerun.
+	local TestsToRerun = {}
+	local FramesToRemove = {}
+	for Index,Frame in pairs(self.ModuleScriptTestFrames) do
+		local Test = Frame.Test
+		if Test.CombinedState == "FAILED" then
+			local ModuleScript = Test.ModuleScript
+			if ModuleScript:IsDescendantOf(game) then
+				table.insert(TestsToRerun,ModuleUnitTest.new(ModuleScript))
+			else
+				FramesToRemove[Index] = Frame
+			end
+		end
+	end
+	
+	--Remove the non-existent tests.
+	for Index,Frame in pairs(FramesToRemove) do
+		self.TestProgressBar:RemoveUnitTest(Frame.Test,true)
+		Frame:Destroy()
+		self.ModuleScriptTestFrames[Index] = nil
+	end 
+	
+	--Run the tests.
+	self:RunTests(TestsToRerun)
 end
 
 --[[
 Runs a list of tests.
 --]]
 function TestListView:RunTests(Tests)
+	--Set the test time.
+	self.TestProgressBar:SetTime()
+	
 	--Sort the tests.
 	table.sort(Tests,function(TestA,TestB)
 		return TestA.Name < TestB.Name
@@ -170,7 +193,7 @@ function TestListView:RunTests(Tests)
 	end
 	
 	--Update the bar if there is no tests.
-	if #self.TestScrollingListFrame:GetChildren() == 0 then
+	if #Tests == 0 then
 		self.TestProgressBar:UpdateProgressBar()
 	end
 end
