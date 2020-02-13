@@ -79,19 +79,16 @@ function TestListView:__new()
 	SideBar.RunTestsButton.MouseButton1Down:Connect(function()
 		if DB then
 			DB = false
+			delay(0.1,function() DB = true end)
 			self:RunAllTests()
-			
-			wait()
-			DB = true
 		end
 	end)
 	SideBar.RunFailedTestsButton.MouseButton1Down:Connect(function()
 		if DB then
 			DB = false
 			warn("Rerrunning failed tests is not implemented")
+			delay(0.1,function() DB = true end)
 			self:RunFailedTests()
-			
-			DB = true
 		end
 	end)
 	
@@ -134,6 +131,28 @@ function TestListView:RunAllTests()
 		self.ModuleScriptTestFrames[Index] = nil
 	end
 	
+	--Run the tests.
+	self:RunTests(Tests)
+end
+
+--[[
+Reruns the failed test. Runs all of the
+tests if no test run was done.
+--]]
+function TestListView:RunFailedTests()
+	--Run all the tests if nothing was run.
+	if #self.TestScrollingListFrame:GetChildren() == 0 then
+		self:RunAllTests()
+		return
+	end
+	
+	--TODO: Implement
+end
+
+--[[
+Runs a list of tests.
+--]]
+function TestListView:RunTests(Tests)
 	--Sort the tests.
 	table.sort(Tests,function(TestA,TestB)
 		return TestA.Name < TestB.Name
@@ -151,23 +170,9 @@ function TestListView:RunAllTests()
 	end
 	
 	--Update the bar if there is no tests.
-	if #Tests == 0 then
+	if #self.TestScrollingListFrame:GetChildren() == 0 then
 		self.TestProgressBar:UpdateProgressBar()
 	end
-end
-
---[[
-Reruns the failed test. Runs all of the
-tests if no test run was done.
---]]
-function TestListView:RunFailedTests()
-	--Run all the tests if nothing was run.
-	if #self.TestScrollingListFrame:GetChildren() == 0 then
-		self:RunAllTests()
-		return
-	end
-	
-	--TODO: Implement
 end
 
 --[[
