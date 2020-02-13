@@ -73,7 +73,7 @@ function TestProgressBar:__new()
 	TotalsTextLabel.Hidden = true
 	TotalsTextLabel.Size = UDim2.new(1,-32,0,16)
 	TotalsTextLabel.Position = UDim2.new(0,30,0,10)
-	TotalsTextLabel.Text = "0"
+	TotalsTextLabel.Text = "Not run"
 	TotalsTextLabel.Parent = self
 	self:__SetChangedOverride("TotalsTextLabel",function() end)
 	self.TotalsTextLabel = TotalsTextLabel
