@@ -108,11 +108,30 @@ function TestListView:RunAllTests()
 	
 	--Find the tests to run.
 	local Tests = {}
+	local Modules = {}
 	for _,Service in pairs(SERVICES_WITH_TESTS) do
 		for _,Test in pairs(TestFinder.GetTests(Service)) do
 			table.insert(Tests,Test)
 			Test.Overrides["plugin"] = self.Plugin
+			Modules[Test.ModuleScript] = true
 		end
+	end
+	
+	--Remove the non-existent tests.
+	local FramesToRemove = {}
+	for Index,Frame in pairs(self.ModuleScriptTestFrames) do
+		local Test = Frame.Test
+		if not Modules[Test.ModuleScript] then
+			local ExistingListFrame = self.ModuleScriptTestFrames[Test.ModuleScript]
+			if ExistingListFrame then
+				FramesToRemove[Index] = Frame
+			end
+		end
+	end
+	for Index,Frame in pairs(FramesToRemove) do
+		self.TestProgressBar:RemoveUnitTest(Frame.Test,true)
+		Frame:Destroy()
+		self.ModuleScriptTestFrames[Index] = nil
 	end
 	
 	--Sort the tests.
@@ -129,6 +148,11 @@ function TestListView:RunAllTests()
 	for _,Test in pairs(Tests) do
 		Test:RunTest()
 		Test:RunSubtests()
+	end
+	
+	--Update the bar if there is no tests.
+	if #Tests == 0 then
+		self.TestProgressBar:UpdateProgressBar()
 	end
 end
 
