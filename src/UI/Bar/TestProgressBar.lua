@@ -21,6 +21,8 @@ function TestProgressBar:__new()
 	self:InitializeSuper("Frame")
 	
 	--Store the tests.
+	self:__SetChangedOverride("TimeText",function() end)
+	self.TimeText = ""
 	self:__SetChangedOverride("Tests",function() end)
 	self.Tests = {}
 	self:__SetChangedOverride("TestEvents",function() end)
@@ -117,7 +119,7 @@ function TestProgressBar:UpdateProgressBar()
 	end
 	
 	--Update the text.
-	self.TotalsTextLabel.Text = tostring(PassedTests).." passed, "..tostring(FailedTests).." failed, "..tostring(SkippedTests).." skipped ("..tostring(TotalTests).." total)"
+	self.TotalsTextLabel.Text = tostring(PassedTests).." passed, "..tostring(FailedTests).." failed, "..tostring(SkippedTests).." skipped ("..tostring(TotalTests).." total) "..self.TimeText
 	
 	--Update the sizes.
 	self.PassedBar.Size = UDim2.new(PassedTests/TotalTests,0,1,0)
@@ -125,6 +127,27 @@ function TestProgressBar:UpdateProgressBar()
 	self.SkippedBar.Size = UDim2.new(SkippedTests/TotalTests,0,1,0)
 	self.FailedBar.Position = UDim2.new(PassedTests/TotalTests,0,0,0)
 	self.SkippedBar.Position = UDim2.new((PassedTests + FailedTests)/TotalTests,0,0,0)
+end
+
+--[[
+Updates the time text of the test.
+Does not update the text automatically.
+--]]
+function TestProgressBar:SetTime(Hours,Minutes,Seconds)
+	--Set the time if it isn't set.
+	if not Hours and not Minutes and not Seconds then
+		local CurrentTime = os.date("*t",tick())
+		Hours,Minutes,Seconds = CurrentTime.hour,CurrentTime.min,CurrentTime.sec
+	elseif Hours and not Minutes and not Seconds then
+		local CurrentTime = os.date("*t",Hours)
+		Hours,Minutes,Seconds = CurrentTime.hour,CurrentTime.min,CurrentTime.sec
+	end
+	
+	--Format and set the time.
+	Hours = tostring(Hours)
+	Minutes = string.format("%02d",Minutes)
+	Seconds = string.format("%02d",Seconds)
+	self.TimeText = "[Started at "..Hours..":"..Minutes..":"..Seconds.."]"
 end
 
 --[[

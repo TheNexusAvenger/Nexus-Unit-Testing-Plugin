@@ -103,6 +103,9 @@ end
 Runs all of the detected tests.
 --]]
 function TestListView:RunAllTests()
+	--Set the test time.
+	self.TestProgressBar:SetTime()
+	
 	--Find the tests to run.
 	local Tests = {}
 	for _,Service in pairs(SERVICES_WITH_TESTS) do
