@@ -27,6 +27,7 @@ function TestScrollingListFrame:__new()
 	
 	--Add the selection constraint.
 	local SelectionConstraint = NexusPluginFramework.new("ListSelectionConstraint")
+	SelectionConstraint.AllowMultipleSelections = true
 	self.ChildAdded:Connect(function(Child)
 		if Child:IsA("TestListFrame") then
 			--Add the list frame.
