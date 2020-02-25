@@ -156,7 +156,7 @@ end
 Updates the displayed output.
 --]]
 function OutputView:UpdateDisplayedOutput()
-	local StartIndex = math.floor(self.ScrollingFrame.CanvasPosition.Y/LINE_HEIGHT_PIXELS)
+	local StartIndex = math.max(0,math.floor(self.ScrollingFrame.CanvasPosition.Y/LINE_HEIGHT_PIXELS))
 	
 	--Set the text to the output or unset the text.
 	for i = 1,math.ceil(self.ScrollingFrame.AbsoluteWindowSize.Y/LINE_HEIGHT_PIXELS) do
@@ -221,20 +221,26 @@ function OutputView:SetTest(Test)
 	end
 	self.TestEvents = {}
 	
-	--Connect the events.
-	table.insert(self.TestEvents,Test.MessageOutputted:Connect(function(Message,Type)
-		self:ProcessOutput(Message,Type)
-	end))
-	
 	--Add the existing output.
 	for _,Output in pairs(Test.Output) do
-		self:AddOutput(Output[1],Output[2])
+		self:ProcessOutput(Output[1],Output[2])
 	end
 	
 	--Update the displayed output if it wasn't done so already.
+	self:UpdateTotalLabels()
 	self:UpdateScrollBarSizes()
 	self:UpdateContainerPoisiton()
 	self:UpdateDisplayedOutput()
+	if self.MaxLineWidth > self.OutputClips.AbsoluteSize.X then
+		self.ScrollingFrame.CanvasPosition = Vector2.new(self.ScrollingFrame.CanvasPosition.X,(#self.OutputLines * LINE_HEIGHT_PIXELS) - self.OutputClips.AbsoluteSize.Y + 16)
+	else
+		self.ScrollingFrame.CanvasPosition = Vector2.new(self.ScrollingFrame.CanvasPosition.X,(#self.OutputLines * LINE_HEIGHT_PIXELS) - self.OutputClips.AbsoluteSize.Y)
+	end
+	
+	--Connect the events.
+	table.insert(self.TestEvents,Test.MessageOutputted:Connect(function(Message,Type)
+		self:AddOutput(Message,Type)
+	end))
 end
 
 
