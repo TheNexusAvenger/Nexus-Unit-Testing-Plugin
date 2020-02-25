@@ -72,7 +72,7 @@ function OutputView:__new()
 		self:UpdateContainerPoisiton()
 		self:UpdateDisplayedOutput()
 	end)
-	self:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+	ScrollingFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
 		self:UpdateContainerPoisiton()
 		self:UpdateDisplayedOutput()
 	end)
@@ -173,9 +173,9 @@ function OutputView:UpdateDisplayedOutput()
 end
 
 --[[
-Adds a line to display in the output.
+Processes a new output entry.
 --]]
-function OutputView:AddOutput(String,Type)
+function OutputView:ProcessOutput(String,Type)
 	--If the string has multiple lines, split the string and add them.
 	if string.find(String,"\n") then
 		for _,SubString in pairs(string.split(String,"\n")) do
@@ -192,6 +192,14 @@ function OutputView:AddOutput(String,Type)
 	if StringWidth > self.MaxLineWidth then
 		self.MaxLineWidth = StringWidth
 	end
+end
+
+--[[
+Adds a line to display in the output.
+--]]
+function OutputView:AddOutput(String,Type)
+	--Process the output.
+	self:ProcessOutput(String,Type)
 	
 	--Update the output view.
 	self:UpdateScrollBarSizes()
@@ -215,7 +223,7 @@ function OutputView:SetTest(Test)
 	
 	--Connect the events.
 	table.insert(self.TestEvents,Test.MessageOutputted:Connect(function(Message,Type)
-		self:AddOutput(Message,Type)
+		self:ProcessOutput(Message,Type)
 	end))
 	
 	--Add the existing output.
@@ -224,9 +232,9 @@ function OutputView:SetTest(Test)
 	end
 	
 	--Update the displayed output if it wasn't done so already.
-	if #self.OutputLines == 0 then
-		self:UpdateDisplayedOutput()
-	end
+	self:UpdateScrollBarSizes()
+	self:UpdateContainerPoisiton()
+	self:UpdateDisplayedOutput()
 end
 
 

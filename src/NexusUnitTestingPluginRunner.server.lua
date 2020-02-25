@@ -8,13 +8,15 @@ local NexusUnitTestingPluginProject = require(script.Parent)
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
 local PluginToggleButton = NexusUnitTestingPluginProject:GetResource("UI.PluginToggleButton")
 local TestListWindow = NexusUnitTestingPluginProject:GetResource("UI.Window.TestListWindow")
+local OutputWindow = NexusUnitTestingPluginProject:GetResource("UI.Window.OutputWindow")
 
 
 --Create the window.
 NexusPluginFramework:SetPlugin(plugin)
-local TestsLists = TestListWindow.new()
+local OutputView = OutputWindow.new()
+local TestsLists = TestListWindow.new(OutputView)
 
 --Create the button.
 local NexusWidgetsToolbar = NexusPluginFramework.new("PluginToolbar","Nexus Widgets")
-local NexusUnitTestingButton = PluginToggleButton.new(NexusWidgetsToolbar,"Unit Tests","Opens the Nexus Unio Testing window","",TestsLists)
+local NexusUnitTestingButton = PluginToggleButton.new(NexusWidgetsToolbar,"Unit Tests","Opens the Nexus Unit Testing window","",TestsLists)
 NexusUnitTestingButton.ClickableWhenViewportHidden = true

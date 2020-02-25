@@ -26,10 +26,11 @@ local SERVICES_WITH_TESTS = {
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local ButtonSideBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.ButtonSideBar")
 local TestProgressBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.TestProgressBar")
-local TestListFrameTests = NexusUnitTestingPluginProject:GetResource("UI.List.TestListFrame")
+local TestListFrame = NexusUnitTestingPluginProject:GetResource("UI.List.TestListFrame")
 local TestScrollingListFrame = NexusUnitTestingPluginProject:GetResource("UI.List.TestScrollingListFrame")
 local TestFinder = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.Runtime.TestFinder")
 local ModuleUnitTest = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.Runtime.ModuleUnitTest")
+local NexusEventCreator = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.NexusInstance.Event.NexusEventCreator")
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
 
 local TestListView = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance"):Extend()
@@ -50,6 +51,10 @@ function TestListView:__new()
 	--Set up storing the list frames references.
 	self:__SetChangedOverride("ModuleScriptTestFrames",function() end)
 	self.ModuleScriptTestFrames = {}
+	
+	--Create the event for opening the output.
+	self:__SetChangedOverride("TestOutputOpened",function() end)
+	self.TestOutputOpened = NexusEventCreator:CreateEvent()
 	
 	--Create the bars.
 	local SideBar = ButtonSideBar.new()
@@ -91,6 +96,24 @@ function TestListView:__new()
 			self:RunFailedTests()
 		end
 	end)
+	
+	--[[
+	Connects the events of a list frame.
+	--]]
+	local function ConnectNewListFrameEvents(ListFrame)
+		if ListFrame:IsA(TestListFrame.ClassName) then
+			--Connect the double click.
+			ListFrame.DoubleClicked:Connect(function()
+				self.TestOutputOpened:Fire(ListFrame.Test)
+			end)
+			
+			--Connect the child added.
+			ListFrame:GetCollapsableContainer().ChildAdded:Connect(function(SubListFrame)
+				ConnectNewListFrameEvents(SubListFrame)
+			end)
+		end
+	end
+	ScrollFrame.ChildAdded:Connect(ConnectNewListFrameEvents)
 	
 	--Set the defaults.
 	self.Size = UDim2.new(1,0,1,0)
@@ -210,7 +233,7 @@ function TestListView:RegisterTest(ModuleScriptTest)
 	end
 	
 	--Create the list frame.
-	local ListFrame = TestListFrameTests.new(ModuleScriptTest)
+	local ListFrame = TestListFrame.new(ModuleScriptTest)
 	ListFrame.Parent = self.TestScrollingListFrame
 	self.ModuleScriptTestFrames[ModuleScriptTest.ModuleScript] = ListFrame
 	self.TestProgressBar:AddUnitTest(ModuleScriptTest)
