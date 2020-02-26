@@ -56,6 +56,10 @@ function TestListView:__new()
 	self:__SetChangedOverride("TestOutputOpened",function() end)
 	self.TestOutputOpened = NexusEventCreator:CreateEvent()
 	
+	--Store the current selected tests for re-selecting on rerun.
+	self:__SetChangedOverride("SelectedTestsNames",function() end)
+	self.SelectedTestsNames = {}
+	
 	--Create the bars.
 	local SideBar = ButtonSideBar.new()
 	SideBar.Hidden = true
@@ -118,10 +122,25 @@ function TestListView:__new()
 			local FullName = BaseFullName..ListFrame.Test.Name
 			ListFrame.Test.FullName = FullName
 			
+			--Select the list frame if it was selected before.
+			--TODO: Disabled as a limitation with NexusSelectionConstraint. Will be resolved with https://trello.com/c/MX45bA3G/24-allow-externally-selecting-multiple-collapsablelistframes-with-nexusselectionconstraint
+			--if self.SelectedTestsNames[FullName] then
+			--	ListFrame.Selected = true
+			--end
+			
 			--Connect the double click.
 			ListFrame.DoubleClicked:Connect(function()
 				self.TestOutputOpened:Fire(ListFrame.Test)
 				CurrentOutputTest = FullName
+			end)
+			
+			--Connect selecting the list frame.
+			ListFrame:GetPropertyChangedSignal("Selected"):Connect(function()
+				if ListFrame.Selected then
+					self.SelectedTestsNames[FullName] = true
+				else
+					self.SelectedTestsNames[FullName] = nil
+				end
 			end)
 			
 			--Connect the child added.
@@ -133,6 +152,7 @@ function TestListView:__new()
 			if CurrentOutputTest == FullName then
 				self.TestOutputOpened:Fire(ListFrame.Test,true)
 			end
+			
 		end
 	end
 	ScrollFrame.ChildAdded:Connect(ConnectNewListFrameEvents)
