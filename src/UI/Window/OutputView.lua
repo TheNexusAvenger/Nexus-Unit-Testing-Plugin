@@ -151,9 +151,9 @@ end
 Updates the size and position of the
 scrolling frame.
 --]]
-function OutputView:UpdateScrollBarSizes()
+function OutputView:UpdateScrollBarSizes(ForceBottom)
 	--Update the canvas size.
-	local IsAtBottom = self:IsScrollBarAtBottom()
+	local IsAtBottom = ForceBottom or self:IsScrollBarAtBottom()
 	self.ScrollingFrame.CanvasSize = UDim2.new(0,self.MaxLineWidth,0,#self.OutputLines * LINE_HEIGHT_PIXELS)
 	
 	--Determine the X offset.
@@ -236,11 +236,20 @@ end
 Adds a line to display in the output.
 --]]
 function OutputView:AddOutput(String,Type)
+	--Determine if the scroll bar is currently at the bottom.
+	local IsAtBottom = self:IsScrollBarAtBottom()
+	local IsNotEnoughLines = self.ScrollingFrame.AbsoluteWindowSize.Y < self.ScrollingFrame.AbsoluteSize.Y
+	
 	--Process the output.
 	self:ProcessOutput(String,Type)
 	
+	--Force the scroll bar to the bottom if too many lines were added.
+	if self.ScrollingFrame.AbsoluteWindowSize.Y > self.ScrollingFrame.AbsoluteSize.Y and IsNotEnoughLines then
+		IsAtBottom = true
+	end
+	
 	--Update the output view.
-	self:UpdateScrollBarSizes()
+	self:UpdateScrollBarSizes(IsAtBottom)
 	self:UpdateContainerPoisiton()
 	self:UpdateDisplayedOutput()
 end
