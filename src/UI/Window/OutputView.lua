@@ -43,10 +43,27 @@ function OutputView:__new()
 	self:__SetChangedOverride("TestEvents",function() end)
 	self.TestEvents = {}
 	
+	--Create the top bar.
+	local TopBar = NexusPluginFramework.new("Frame")
+	TopBar.Hidden = true
+	TopBar.BorderSizePixel = 1
+	TopBar.Size = UDim2.new(1,0,0,21)
+	TopBar.Parent = self
+	
+	local TopBarLabel = NexusPluginFramework.new("TextLabel")
+	TopBarLabel.Size = UDim2.new(1,-4,0,16)
+	TopBarLabel.Position = UDim2.new(0,2,0,2)
+	TopBarLabel.Text = ""
+	TopBarLabel.Font = "SourceSansBold"
+	TopBarLabel.Parent = TopBar
+	self:__SetChangedOverride("TopBarLabel",function() end)
+	self.TopBarLabel = TopBarLabel
+			
 	--Create the scrolling frame.
 	local ScrollingFrame = NexusPluginFramework.new("ScrollingFrame","Qt5")
 	ScrollingFrame.Hidden = true
-	ScrollingFrame.Size = UDim2.new(1,0,1,0)
+	ScrollingFrame.Size = UDim2.new(1,0,1,-22)
+	ScrollingFrame.Position = UDim2.new(0,0,0,22)
 	ScrollingFrame.BackgroundTransparency = 1
 	ScrollingFrame.Parent = self
 	self:__SetChangedOverride("ScrollingFrame",function() end)
@@ -55,7 +72,8 @@ function OutputView:__new()
 	--Create the output view.
 	local OutputClips = NexusPluginFramework.new("Frame")
 	OutputClips.Hidden = true
-	OutputClips.Size = UDim2.new(1,-17,1,0)
+	OutputClips.Size = UDim2.new(1,-17,1,-22)
+	OutputClips.Position = UDim2.new(0,0,0,22)
 	OutputClips.ClipsDescendants = true
 	OutputClips.Parent = self
 	self:__SetChangedOverride("OutputClips",function() end)
@@ -68,7 +86,7 @@ function OutputView:__new()
 	self.OutputContainer = OutputContainer
 	
 	--Connect the events.
-	self:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+	ScrollingFrame:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 		self:UpdateTotalLabels()
 		self:UpdateContainerPoisiton()
 		self:UpdateDisplayedOutput()
@@ -97,7 +115,7 @@ size of the frame.
 --]]
 function OutputView:UpdateTotalLabels()
 	--Determine how many labels are needed.
-	local RequiredLabels = math.ceil(self.AbsoluteSize.Y/LINE_HEIGHT_PIXELS)
+	local RequiredLabels = math.ceil(self.ScrollingFrame.AbsoluteSize.Y/LINE_HEIGHT_PIXELS)
 	
 	--Add extra labels.
 	for i = 1,RequiredLabels do
@@ -112,9 +130,11 @@ function OutputView:UpdateTotalLabels()
 	end
 	
 	--Remove unneded labels.
-	for i = RequiredLabels + 1,#self.OutputContainer:GetChildren() do
-		self.OutputLabels[i]:Destroy()
-		self.OutputLabels[i] = nil
+	for i = RequiredLabels + 1,#self.OutputLabels do
+		if self.OutputLabels[i] then
+			self.OutputLabels[i]:Destroy()
+			self.OutputLabels[i] = nil
+		end
 	end
 end
 
@@ -135,12 +155,12 @@ function OutputView:UpdateScrollBarSizes()
 	
 	--Update the clips size if a bottom scroll bar exists.
 	if self.MaxLineWidth > self.OutputClips.AbsoluteSize.X then
-		self.OutputClips.Size = UDim2.new(1,SizeXOffset,1,-17)
+		self.OutputClips.Size = UDim2.new(1,SizeXOffset,1,-(17 + 22))
 		if IsAtBottom then
 			self.ScrollingFrame.CanvasPosition = Vector2.new(self.ScrollingFrame.CanvasPosition.X,(#self.OutputLines * LINE_HEIGHT_PIXELS) - self.OutputClips.AbsoluteSize.Y + 16)
 		end
 	else
-		self.OutputClips.Size = UDim2.new(1,SizeXOffset,1,0)
+		self.OutputClips.Size = UDim2.new(1,SizeXOffset,1,-22)
 		if IsAtBottom then
 			self.ScrollingFrame.CanvasPosition = Vector2.new(self.ScrollingFrame.CanvasPosition.X,(#self.OutputLines * LINE_HEIGHT_PIXELS) - self.OutputClips.AbsoluteSize.Y)
 		end
@@ -170,11 +190,13 @@ function OutputView:UpdateDisplayedOutput()
 		local EntryId = StartIndex + i
 		local OutputData = self.OutputLines[EntryId]
 		local OutputLabel = self.OutputLabels[i]
-		if OutputData then
-			OutputLabel.Text = OutputData[1]
-			OutputLabel.TextColor3 = ENUMS_TO_COLORS[OutputData[2]]
-		else
-			OutputLabel.Text = ""
+		if OutputLabel then
+			if OutputData then
+				OutputLabel.Text = OutputData[1]
+				OutputLabel.TextColor3 = ENUMS_TO_COLORS[OutputData[2]]
+			else
+				OutputLabel.Text = ""
+			end
 		end
 	end
 end
@@ -218,6 +240,9 @@ end
 Sets the test to use for the output.
 --]]
 function OutputView:SetTest(Test)
+	--Set the top bar name.
+	self.TopBarLabel.Text = Test.Name
+	
 	--Clear the output.
 	self.OutputLines = {}
 	self.MaxLineWidth = 0

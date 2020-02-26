@@ -24,17 +24,17 @@ NexusUnitTesting:RegisterUnitTest("LabelEfficiency",function(UnitTest)
 	UnitTest:AssertEquals(#CuT:GetChildren(),0,"Child objects are exposed.")
 	
 	--Set the size and assert the correct amount of list frames exist.
-	CuT.Size = UDim2.new(0,200,0,170)
+	CuT.Size = UDim2.new(0,200,0,170 + 22)
 	local Temp = CuT.AbsoluteSize
 	UnitTest:AssertEquals(#CuT.OutputContainer:GetChildren(),10,"Total labels is incorrect.")
 	
 	--Resize the frame and assert new labels were created.
-	CuT.Size = UDim2.new(0,200,0,200)
+	CuT.Size = UDim2.new(0,200,0,200 + 22)
 	local Temp = CuT.AbsoluteSize
 	UnitTest:AssertEquals(#CuT.OutputContainer:GetChildren(),12,"Total labels is incorrect.")
 	
 	--Reisize the frame and assert labels were removed.
-	CuT.Size = UDim2.new(0,200,0,170)
+	CuT.Size = UDim2.new(0,200,0,170 + 22)
 	local Temp = CuT.AbsoluteSize
 	UnitTest:AssertEquals(#CuT.OutputContainer:GetChildren(),10,"Total labels is incorrect.")
 end)
@@ -45,7 +45,7 @@ Tests the IsScrollBarAtBottom method.
 NexusUnitTesting:RegisterUnitTest("IsScrollBarAtBottom",function(UnitTest)
 	--Create the component under testing.
 	local CuT = OutputView.new()
-	CuT.Size = UDim2.new(0,200,0,60)
+	CuT.Size = UDim2.new(0,200,0,60 + 22)
 	CuT.Parent = Instance.new("ScreenGui",game:GetService("Lighting"))
 	delay(0.1,function() CuT.Parent:Destroy() end)
 	
@@ -88,7 +88,7 @@ Tests the UpdateScrollBarSizes method.
 NexusUnitTesting:RegisterUnitTest("UpdateScrollBarSizes",function(UnitTest)
 	--Create the component under testing.
 	local CuT = OutputView.new()
-	CuT.Size = UDim2.new(0,200,0,50)
+	CuT.Size = UDim2.new(0,200,0,50 + 22)
 	CuT.Parent = Instance.new("ScreenGui",game:GetService("Lighting"))
 	delay(0.1,function() CuT.Parent:Destroy() end)
 	
@@ -97,13 +97,13 @@ NexusUnitTesting:RegisterUnitTest("UpdateScrollBarSizes",function(UnitTest)
 	CuT.MaxLineWidth = 50
 	CuT:UpdateScrollBarSizes()
 	UnitTest:AssertEquals(CuT.ScrollingFrame.CanvasSize,UDim2.new(0,50,0,34),"Canvas size is incorrect.")
-	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,0,1,0),"Clips size is incorrect.")
+	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,0,1,-22),"Clips size is incorrect.")
 	
 	--Set the max line width to requiring a bottom scroll bar and assert the sizes are correct.
 	CuT.MaxLineWidth = 250
 	CuT:UpdateScrollBarSizes()
 	UnitTest:AssertEquals(CuT.ScrollingFrame.CanvasSize,UDim2.new(0,250,0,34),"Canvas size is incorrect.")
-	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,0,1,-17),"Clips size is incorrect.")
+	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,0,1,-(17 + 22)),"Clips size is incorrect.")
 end)
 
 --[[
@@ -112,7 +112,7 @@ Tests the UpdateContainerPoisiton method.
 NexusUnitTesting:RegisterUnitTest("UpdateContainerPoisiton",function(UnitTest)
 	--Create the component under testing.
 	local CuT = OutputView.new()
-	CuT.Size = UDim2.new(0,200,0,50)
+	CuT.Size = UDim2.new(0,200,0,50 + 22)
 	CuT.Parent = Instance.new("ScreenGui",game:GetService("Lighting"))
 	delay(0.1,function() CuT.Parent:Destroy() end)
 	
@@ -146,7 +146,7 @@ Tests the UpdateDisplayedOutput method.
 NexusUnitTesting:RegisterUnitTest("UpdateDisplayedOutput",function(UnitTest)
 	--Create the component under testing.
 	local CuT = OutputView.new()
-	CuT.Size = UDim2.new(0,200,0,50)
+	CuT.Size = UDim2.new(0,200,0,50 + 22)
 	CuT.Parent = Instance.new("ScreenGui",game:GetService("Lighting"))
 	delay(0.1,function() CuT.Parent:Destroy() end)
 	
@@ -223,7 +223,7 @@ Tests the AddOutput method.
 NexusUnitTesting:RegisterUnitTest("AddOutput",function(UnitTest)
 	--Create the component under testing.
 	local CuT = OutputView.new()
-	CuT.Size = UDim2.new(0,200,0,50)
+	CuT.Size = UDim2.new(0,200,0,50 + 22)
 	CuT.Parent = Instance.new("ScreenGui",game:GetService("Lighting"))
 	delay(0.1,function() CuT.Parent:Destroy() end)
 	
@@ -261,7 +261,7 @@ Tests the SetTest method.
 NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	--Create the component under testing.
 	local CuT = OutputView.new()
-	CuT.Size = UDim2.new(0,200,0,50)
+	CuT.Size = UDim2.new(0,200,0,50 + 22)
 	CuT.Parent = Instance.new("ScreenGui",game:GetService("Lighting"))
 	delay(0.1,function() CuT.Parent:Destroy() end)
 	
@@ -281,6 +281,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	UnitTest:AssertEquals(CuT.OutputLabels[1].TextColor3,"ErrorText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[2].TextColor3,"InfoText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[3].TextColor3,"InfoText","Text color is incorrect.")
+	UnitTest:AssertEquals(CuT.TopBarLabel.Text,"Test 1","Displayed test name is incorrect.")
 	
 	--Set a test with an existting output and assert the messages are displayed.
 	CuT:SetTest(Test2)
@@ -290,6 +291,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	UnitTest:AssertEquals(CuT.OutputLabels[3].Text,"","Text is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[1].TextColor3,"MainText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[2].TextColor3,"WarningText","Text color is incorrect.")
+	UnitTest:AssertEquals(CuT.TopBarLabel.Text,"Test 2","Displayed test name is incorrect.")
 	
 	--Send an output for a previous test and assert it wasn't added.
 	Test1:OutputMessage(Enum.MessageType.MessageError,"Fail")
@@ -306,6 +308,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	UnitTest:AssertEquals(CuT.OutputLabels[1].Text,"","Text is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[2].Text,"","Text is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[3].Text,"","Text is incorrect.")
+	UnitTest:AssertEquals(CuT.TopBarLabel.Text,"Test 3","Displayed test name is incorrect.")
 end)
 
 
