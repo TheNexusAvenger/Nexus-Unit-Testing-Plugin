@@ -100,6 +100,7 @@ function TestListView:__new()
 	--[[
 	Connects the events of a list frame.
 	--]]
+	local CurrentOutputTest
 	local function ConnectNewListFrameEvents(ListFrame,BaseFullName)
 		if BaseFullName == nil then
 			BaseFullName = ""
@@ -113,12 +114,18 @@ function TestListView:__new()
 			--Connect the double click.
 			ListFrame.DoubleClicked:Connect(function()
 				self.TestOutputOpened:Fire(ListFrame.Test)
+				CurrentOutputTest = FullName
 			end)
 			
 			--Connect the child added.
 			ListFrame:GetCollapsableContainer().ChildAdded:Connect(function(SubListFrame)
 				ConnectNewListFrameEvents(SubListFrame,FullName.." > ")
 			end)
+			
+			--Open the output window if the test name matches (test is rerunning).
+			if CurrentOutputTest == FullName then
+				self.TestOutputOpened:Fire(ListFrame.Test,true)
+			end
 		end
 	end
 	ScrollFrame.ChildAdded:Connect(ConnectNewListFrameEvents)

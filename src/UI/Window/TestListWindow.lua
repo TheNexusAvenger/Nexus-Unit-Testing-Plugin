@@ -24,8 +24,10 @@ function TestListWindow:__new(OutputWindow)
 	ListView.Parent = self
 	
 	--Connect setting the output.
-	ListView.TestOutputOpened:Connect(function(Test)
-		OutputWindow:SetTest(Test)
+	ListView.TestOutputOpened:Connect(function(Test,DontForceEnabled)
+		if DontForceEnabled ~= true or OutputWindow.Enabled then
+			OutputWindow:SetTest(Test)
+		end
 	end)
 end
 
