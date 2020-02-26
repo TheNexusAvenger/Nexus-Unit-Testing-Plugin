@@ -100,8 +100,16 @@ function TestListView:__new()
 	--[[
 	Connects the events of a list frame.
 	--]]
-	local function ConnectNewListFrameEvents(ListFrame)
+	local function ConnectNewListFrameEvents(ListFrame,BaseFullName)
+		if BaseFullName == nil then
+			BaseFullName = ""
+		end
+		
 		if ListFrame:IsA(TestListFrame.ClassName) then
+			--Set the full name.
+			local FullName = BaseFullName..ListFrame.Test.Name
+			ListFrame.Test.FullName = FullName
+			
 			--Connect the double click.
 			ListFrame.DoubleClicked:Connect(function()
 				self.TestOutputOpened:Fire(ListFrame.Test)
@@ -109,7 +117,7 @@ function TestListView:__new()
 			
 			--Connect the child added.
 			ListFrame:GetCollapsableContainer().ChildAdded:Connect(function(SubListFrame)
-				ConnectNewListFrameEvents(SubListFrame)
+				ConnectNewListFrameEvents(SubListFrame,FullName.." > ")
 			end)
 		end
 	end

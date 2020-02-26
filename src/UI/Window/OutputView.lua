@@ -58,6 +58,15 @@ function OutputView:__new()
 	TopBarLabel.Parent = TopBar
 	self:__SetChangedOverride("TopBarLabel",function() end)
 	self.TopBarLabel = TopBarLabel
+	
+	local TopBarFullNameLabel = NexusPluginFramework.new("TextLabel")
+	TopBarFullNameLabel.Size = UDim2.new(1,-4,0,16)
+	TopBarFullNameLabel.Position = UDim2.new(0,2,0,2)
+	TopBarFullNameLabel.Text = ""
+	TopBarFullNameLabel.Font = "SourceSansItalic"
+	TopBarFullNameLabel.Parent = TopBar
+	self:__SetChangedOverride("TopBarFullNameLabel",function() end)
+	self.TopBarFullNameLabel = TopBarFullNameLabel
 			
 	--Create the scrolling frame.
 	local ScrollingFrame = NexusPluginFramework.new("ScrollingFrame","Qt5")
@@ -242,6 +251,12 @@ Sets the test to use for the output.
 function OutputView:SetTest(Test)
 	--Set the top bar name.
 	self.TopBarLabel.Text = Test.Name
+	if Test.FullName then
+		self.TopBarFullNameLabel.Text = "("..Test.FullName..")"
+		self.TopBarFullNameLabel.Position = UDim2.new(0,TextService:GetTextSize(Test.Name,14,"SourceSansBold",Vector2.new(2000,16)).X + 4,0,2)
+	else
+		self.TopBarFullNameLabel.Text = ""
+	end
 	
 	--Clear the output.
 	self.OutputLines = {}

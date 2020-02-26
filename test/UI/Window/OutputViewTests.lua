@@ -267,6 +267,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	
 	--Create 3 tests.
 	local Test1,Test2,Test3 = UnitTestClass.new("Test 1"),UnitTestClass.new("Test 2"),UnitTestClass.new("Test 3")
+	Test2.FullName = "Test N > Test 2"
 	Test2:OutputMessage(Enum.MessageType.MessageOutput,"String 4")
 	Test2:OutputMessage(Enum.MessageType.MessageWarning,"String 5")
 	
@@ -282,6 +283,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	UnitTest:AssertEquals(CuT.OutputLabels[2].TextColor3,"InfoText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[3].TextColor3,"InfoText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.TopBarLabel.Text,"Test 1","Displayed test name is incorrect.")
+	UnitTest:AssertEquals(CuT.TopBarFullNameLabel.Text,"","Displayed full test name is incorrect.")
 	
 	--Set a test with an existting output and assert the messages are displayed.
 	CuT:SetTest(Test2)
@@ -292,6 +294,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	UnitTest:AssertEquals(CuT.OutputLabels[1].TextColor3,"MainText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[2].TextColor3,"WarningText","Text color is incorrect.")
 	UnitTest:AssertEquals(CuT.TopBarLabel.Text,"Test 2","Displayed test name is incorrect.")
+	UnitTest:AssertEquals(CuT.TopBarFullNameLabel.Text,"(Test N > Test 2)","Displayed full test name is incorrect.")
 	
 	--Send an output for a previous test and assert it wasn't added.
 	Test1:OutputMessage(Enum.MessageType.MessageError,"Fail")
@@ -309,6 +312,7 @@ NexusUnitTesting:RegisterUnitTest("SetTest",function(UnitTest)
 	UnitTest:AssertEquals(CuT.OutputLabels[2].Text,"","Text is incorrect.")
 	UnitTest:AssertEquals(CuT.OutputLabels[3].Text,"","Text is incorrect.")
 	UnitTest:AssertEquals(CuT.TopBarLabel.Text,"Test 3","Displayed test name is incorrect.")
+	UnitTest:AssertEquals(CuT.TopBarFullNameLabel.Text,"","Displayed full test name is incorrect.")
 end)
 
 
