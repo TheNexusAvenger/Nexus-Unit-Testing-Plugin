@@ -23,6 +23,10 @@ function TestListWindow:__new(OutputWindow)
 	ListView.Size = UDim2.new(1,0,1,0)
 	ListView.Parent = self
 	
+	--Store the test list view.
+	self:__SetChangedOverride("TestListView",function() end)
+	self.TestListView = ListView
+	
 	--Connect setting the output.
 	ListView.TestOutputOpened:Connect(function(Test,DontForceEnabled)
 		if DontForceEnabled ~= true or OutputWindow.Enabled then
