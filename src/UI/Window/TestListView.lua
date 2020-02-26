@@ -181,12 +181,32 @@ function TestListView:RunFailedTests()
 		return
 	end
 	
+	--[[
+	Return if a test contains a failed test.
+	--]]
+	local function ContainsFailedTest(Test)
+		--Return true if the test failed.
+		if Test.State == "FAILED" or Test.CombinedState == "FAILED" then
+			return true
+		end
+		
+		--Return if a subtest has a failure.
+		for _,SubTest in pairs(Test.SubTests) do
+			if ContainsFailedTest(SubTest) then
+				return true
+			end
+		end
+		
+		--Return false (no failure).
+		return false
+	end
+	
 	--Determine the ModuleScripts to rerun.
 	local TestsToRerun = {}
 	local FramesToRemove = {}
 	for Index,Frame in pairs(self.ModuleScriptTestFrames) do
 		local Test = Frame.Test
-		if Test.CombinedState == "FAILED" then
+		if ContainsFailedTest(Test) then
 			local ModuleScript = Test.ModuleScript
 			if ModuleScript:IsDescendantOf(game) then
 				table.insert(TestsToRerun,ModuleUnitTest.new(ModuleScript))
