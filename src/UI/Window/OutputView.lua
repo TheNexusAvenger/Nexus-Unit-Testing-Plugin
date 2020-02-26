@@ -126,14 +126,20 @@ function OutputView:UpdateScrollBarSizes()
 	local IsAtBottom = self:IsScrollBarAtBottom()
 	self.ScrollingFrame.CanvasSize = UDim2.new(0,self.MaxLineWidth,0,#self.OutputLines * LINE_HEIGHT_PIXELS)
 	
+	--Determine the X offset.
+	local SizeXOffset = 0
+	if #self.OutputLines * LINE_HEIGHT_PIXELS > self.OutputClips.AbsoluteSize.Y then
+		SizeXOffset = -17
+	end
+	
 	--Update the clips size if a bottom scroll bar exists.
 	if self.MaxLineWidth > self.OutputClips.AbsoluteSize.X then
-		self.OutputClips.Size = UDim2.new(1,-17,1,-17)
+		self.OutputClips.Size = UDim2.new(1,SizeXOffset,1,-17)
 		if IsAtBottom then
 			self.ScrollingFrame.CanvasPosition = Vector2.new(self.ScrollingFrame.CanvasPosition.X,(#self.OutputLines * LINE_HEIGHT_PIXELS) - self.OutputClips.AbsoluteSize.Y + 16)
 		end
 	else
-		self.OutputClips.Size = UDim2.new(1,-17,1,0)
+		self.OutputClips.Size = UDim2.new(1,SizeXOffset,1,0)
 		if IsAtBottom then
 			self.ScrollingFrame.CanvasPosition = Vector2.new(self.ScrollingFrame.CanvasPosition.X,(#self.OutputLines * LINE_HEIGHT_PIXELS) - self.OutputClips.AbsoluteSize.Y)
 		end

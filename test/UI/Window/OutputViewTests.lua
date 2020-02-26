@@ -97,13 +97,13 @@ NexusUnitTesting:RegisterUnitTest("UpdateScrollBarSizes",function(UnitTest)
 	CuT.MaxLineWidth = 50
 	CuT:UpdateScrollBarSizes()
 	UnitTest:AssertEquals(CuT.ScrollingFrame.CanvasSize,UDim2.new(0,50,0,34),"Canvas size is incorrect.")
-	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,-17,1,0),"Clips size is incorrect.")
+	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,0,1,0),"Clips size is incorrect.")
 	
 	--Set the max line width to requiring a bottom scroll bar and assert the sizes are correct.
 	CuT.MaxLineWidth = 250
 	CuT:UpdateScrollBarSizes()
 	UnitTest:AssertEquals(CuT.ScrollingFrame.CanvasSize,UDim2.new(0,250,0,34),"Canvas size is incorrect.")
-	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,-17,1,-17),"Clips size is incorrect.")
+	UnitTest:AssertEquals(CuT.OutputClips.Size,UDim2.new(1,0,1,-17),"Clips size is incorrect.")
 end)
 
 --[[
