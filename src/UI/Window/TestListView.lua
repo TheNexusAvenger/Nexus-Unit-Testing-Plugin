@@ -96,6 +96,13 @@ function TestListView:__new()
 			self:RunFailedTests()
 		end
 	end)
+	SideBar.RunSelectedTestsButton.MouseButton1Down:Connect(function()
+		if DB then
+			DB = false
+			delay(0.1,function() DB = true end)
+			self:RunSelectedTests()
+		end
+	end)
 	
 	--[[
 	Connects the events of a list frame.
@@ -222,6 +229,63 @@ function TestListView:RunFailedTests()
 		Frame:Destroy()
 		self.ModuleScriptTestFrames[Index] = nil
 	end 
+	
+	--Run the tests.
+	self:RunTests(TestsToRerun)
+end
+
+--[[
+Reruns the selected test. Runs all of the
+tests if tests were selected.
+--]]
+function TestListView:RunSelectedTests()
+	--[[
+	Returns if a list frame is selected or a child is.
+	--]]
+	local function ListFrameIsSelected(ListFrame)
+		--If the label is selected, return true.
+		if ListFrame.Selected then
+			return true
+		end
+		
+		--Return true if a subtest is selected.
+		for _,TestListFrame in pairs(ListFrame:GetCollapsableContainer():GetChildren()) do
+			if ListFrameIsSelected(TestListFrame) then
+				return true
+			end
+		end
+		
+		--Return false (list frame and children aren't selected).
+		return false
+	end
+	
+	--Determine the tests to rerun and the frames to remove.
+	local FramesToRemove = {}
+	local TestsToRerun = {}
+	for Index,ListFrame in pairs(self.ModuleScriptTestFrames) do
+		--Add the test to be removed if the module was removed.
+		if ListFrameIsSelected(ListFrame) then
+			local ModuleScript = ListFrame.Test.ModuleScript
+			if ModuleScript:IsDescendantOf(game) then
+				table.insert(TestsToRerun,ModuleUnitTest.new(ModuleScript))
+			else
+				FramesToRemove[Index] = ListFrame
+			end
+		end
+	end
+	
+	--Rerun all tests if none are selected.
+	if #TestsToRerun == 0 then
+		self:RunAllTests()
+		return
+	end
+	
+	--Remove the non-existent tests.
+	for Index,Frame in pairs(FramesToRemove) do
+		self.TestProgressBar:RemoveUnitTest(Frame.Test,true)
+		Frame:Destroy()
+		self.ModuleScriptTestFrames[Index] = nil
+	end
 	
 	--Run the tests.
 	self:RunTests(TestsToRerun)

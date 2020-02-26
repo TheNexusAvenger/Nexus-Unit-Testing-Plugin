@@ -8,6 +8,7 @@ local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
 local RunTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunTestsButton")
 local RunFailedTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunFailedTestsButton")
+local RunSelectedTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunSelectedTestsButton")
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
 local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
 
@@ -38,6 +39,14 @@ function ButtonSideBar:__new()
 	RunFailedTests.Parent = self
 	self:__SetChangedOverride("RunFailedTestsButton",function() end)
 	self.RunFailedTestsButton = RunFailedTests
+	
+	local RunSelectedTests = RunSelectedTestsButton.new()
+	RunSelectedTests.Hidden = true
+	RunSelectedTests.Size = UDim2.new(0,14,0,14)
+	RunSelectedTests.Position = UDim2.new(0,7,0,57)
+	RunSelectedTests.Parent = self
+	self:__SetChangedOverride("RunSelectedTestsButton",function() end)
+	self.RunSelectedTestsButton = RunSelectedTests
 	
 	--Set the defaults.
 	self.BorderSizePixel = 1

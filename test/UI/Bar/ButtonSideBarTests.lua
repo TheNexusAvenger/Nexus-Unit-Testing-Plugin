@@ -18,7 +18,7 @@ NexusUnitTesting:RegisterUnitTest("Constructor",function(UnitTest)
 	--Create the component under testing and assert it is set up correctly.
 	local CuT = ButtonSideBar.new()
 	UnitTest:AssertEquals(#CuT:GetChildren(),0,"Child buttons are exposed.")
-	UnitTest:AssertEquals(#CuT:GetWrappedInstance():GetChildren(),2,"Child buttons are incorrect.")
+	UnitTest:AssertEquals(#CuT:GetWrappedInstance():GetChildren(),3,"Child buttons are incorrect.")
 end)
 
 

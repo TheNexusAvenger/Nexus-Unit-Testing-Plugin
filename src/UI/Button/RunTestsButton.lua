@@ -9,7 +9,7 @@ local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local RunTestsButton = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance"):Extend()
 RunTestsButton:SetClassName("RunTestsButton")
 
-local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4644077416"
+local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
 
 
 
