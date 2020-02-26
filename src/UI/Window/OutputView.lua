@@ -4,6 +4,7 @@ TheNexusAvenger
 Frame for viewing the output of a test.
 --]]
 
+local TEXT_MARGIN_PIXELS = 3
 local LINE_HEIGHT_PIXELS = 17
 local ENUMS_TO_COLORS = {
 	[Enum.MessageType.MessageOutput] = "MainText",
@@ -103,7 +104,7 @@ function OutputView:UpdateTotalLabels()
 		if not self.OutputLabels[i] then
 			local NewLabel = NexusPluginFramework.new("TextLabel")
 			NewLabel.Size = UDim2.new(1,0,0,LINE_HEIGHT_PIXELS)
-			NewLabel.Position = UDim2.new(0,0,0,17 * (i - 1))
+			NewLabel.Position = UDim2.new(0,TEXT_MARGIN_PIXELS,0,17 * (i - 1))
 			NewLabel.Text = ""
 			NewLabel.Parent = self.OutputContainer
 			self.OutputLabels[i] = NewLabel
@@ -194,7 +195,7 @@ function OutputView:ProcessOutput(String,Type)
 	table.insert(self.OutputLines,{String,Type})
 	
 	--Update the max size.
-	local StringWidth = TextService:GetTextSize(String,14,"SourceSans",Vector2.new(2000,LINE_HEIGHT_PIXELS)).X + 4
+	local StringWidth = TextService:GetTextSize(String,14,"SourceSans",Vector2.new(2000,LINE_HEIGHT_PIXELS)).X + (TEXT_MARGIN_PIXELS * 2)
 	if StringWidth > self.MaxLineWidth then
 		self.MaxLineWidth = StringWidth
 	end
