@@ -70,7 +70,12 @@ function TestListFrame:__new(Test)
 		if Test.CombinedState == NexusUnitTesting.TestState.InProgress then
 			TestStartTime = tick()
 		elseif Test.CombinedState ~= NexusUnitTesting.TestState.NotRun then
-			TestTimeLabel.Text = string.format("%.3f",tick() - TestStartTime).." seconds"
+			if TestStartTime == 0 then
+				TestTimeLabel.Visible = false
+			else
+				TestTimeLabel.Text = string.format("%.3f",tick() - TestStartTime).." seconds"
+				TestTimeLabel.Visible = true
+			end
 		end
 	end)
 	
