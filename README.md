@@ -8,7 +8,7 @@ is isolated for each unit test.
 ## Installing
 ### Roblox Plugin Marketplace
 The plugin can be found on the Plugin Marketplace.
-https://www.roblox.com/library/4735386072/Nexus-Unit-Testing-Plugin
+<br>https://www.roblox.com/library/4735386072/Nexus-Unit-Testing-Plugin
 
 ### Rojo / Nexus Git
 This repository can be synced into Roblox Studio using 
