@@ -10,15 +10,30 @@ local NexusUnitTestingPlugin = require(game:GetService("ReplicatedStorage"):Wait
 local TestScrollingListFrame = NexusUnitTestingPlugin:GetResource("UI.List.TestScrollingListFrame")
 local NexusPluginFramework = NexusUnitTestingPlugin:GetResource("NexusPluginFramework")
 
+local TestScrollingListFrameUnitTest = NexusUnitTesting.UnitTest:Extend()
 
+
+
+--[[
+Sets up the test.
+--]]
+function TestScrollingListFrameUnitTest:Setup()
+	self.CuT = TestScrollingListFrame.new()
+end
+
+--[[
+Tears down the test.
+--]]
+function TestScrollingListFrameUnitTest:Teardown()
+	self.CuT:Destroy()
+end
 
 --[[
 Tests setting the CombinedState in the test.
 --]]
-NexusUnitTesting:RegisterUnitTest("CombinedStateTest",function(UnitTest)
-	--Create the component under testing and assert it is the correct size.
-	local CuT = TestScrollingListFrame.new()
-	UnitTest:AssertEquals(CuT.CanvasSize,UDim2.new(0,0,0,0),"Default canvas size is incorrect.")
+NexusUnitTesting:RegisterUnitTest(TestScrollingListFrameUnitTest.new("CombinedStateTest"):SetRun(function(self)
+	--The component under testing is the correct size.
+	self:AssertEquals(self.CuT.CanvasSize,UDim2.new(0,0,0,0),"Default canvas size is incorrect.")
 	
 	--Add several frames.
 	local Frame1 = NexusPluginFramework.new("Frame")
@@ -30,26 +45,26 @@ NexusUnitTesting:RegisterUnitTest("CombinedStateTest",function(UnitTest)
 	local Frame3 = NexusPluginFramework.new("Frame")
 	Frame3.Name = "Frame3"
 	Frame3.Size = UDim2.new(0,200,0,200)
-	Frame1.Parent = CuT
-	Frame3.Parent = CuT
-	Frame2.Parent = CuT
+	Frame1.Parent = self.CuT
+	Frame3.Parent = self.CuT
+	Frame2.Parent = self.CuT
 	
 	--Assert the positions and canvas size are correct.
-	UnitTest:AssertEquals(Frame1.AbsolutePosition,Vector2.new(0,0),"Position is incorrect.")
-	UnitTest:AssertEquals(Frame2.AbsolutePosition,Vector2.new(0,200),"Position is incorrect.")
-	UnitTest:AssertEquals(Frame3.AbsolutePosition,Vector2.new(0,400),"Position is incorrect.")
-	UnitTest:AssertEquals(CuT.CanvasSize,UDim2.new(0,0,0,600),"Canvas size is incorrect.")
+	self:AssertEquals(Frame1.AbsolutePosition,Vector2.new(0,0),"Position is incorrect.")
+	self:AssertEquals(Frame2.AbsolutePosition,Vector2.new(0,200),"Position is incorrect.")
+	self:AssertEquals(Frame3.AbsolutePosition,Vector2.new(0,400),"Position is incorrect.")
+	self:AssertEquals(self.CuT.CanvasSize,UDim2.new(0,0,0,600),"Canvas size is incorrect.")
 	
 	--Remove 2 frames and assert the position and canvas size are correct.
 	Frame1:Destroy()
 	Frame2:Destroy()
-	UnitTest:AssertEquals(Frame3.AbsolutePosition,Vector2.new(0,0),"Position is incorrect.")
-	UnitTest:AssertEquals(CuT.CanvasSize,UDim2.new(0,0,0,200),"Canvas size is incorrect.")
+	self:AssertEquals(Frame3.AbsolutePosition,Vector2.new(0,0),"Position is incorrect.")
+	self:AssertEquals(self.CuT.CanvasSize,UDim2.new(0,0,0,200),"Canvas size is incorrect.")
 	
 	--Remove the last frame and assert the canvas size resets.
 	Frame3:Destroy()
-	UnitTest:AssertEquals(CuT.CanvasSize,UDim2.new(0,0,0,200),"Canvas size is incorrect.")
-end)
+	self:AssertEquals(self.CuT.CanvasSize,UDim2.new(0,0,0,200),"Canvas size is incorrect.")
+end))
 
 
 
