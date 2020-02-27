@@ -30,3 +30,9 @@ will appear to increase without ever going down. Nexus Plugin
 Framework is missing some features to properly clear resources.
 This will be resolved in the next version, but will require some
 work with the plugin to update.
+
+### Nested tests don't select correctly
+When selecting tests without pressing `Ctrl` or `Shift`, the
+current selected test is deselected. If a test is nested in another
+test, this doesn't happen. This may be a problem with Nexus Plugin
+Framework.

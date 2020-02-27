@@ -19,7 +19,7 @@
                         }
                     },
                     "TestEZ": {
-                        "$path": "_module/Nexus-Unit-Testing/module/TestEZ/lib"
+                        "$path": "module/Nexus-Unit-Testing/module/TestEZ/lib"
                     }
                 },
                 "NexusPluginFramework": {
