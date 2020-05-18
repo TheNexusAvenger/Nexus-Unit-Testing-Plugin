@@ -323,15 +323,13 @@ function TestListView:RunTests(Tests)
 		return TestA.Name < TestB.Name
 	end)
 	
-	--Register the tests.
+	--Register and run the tests.
 	for _,Test in pairs(Tests) do
-		self:RegisterTest(Test)
-	end
-	
-	--Run the tests.
-	for _,Test in pairs(Tests) do
-		Test:RunTest()
-		Test:RunSubtests()
+		coroutine.wrap(function()
+			self:RegisterTest(Test)
+			Test:RunTest()
+			Test:RunSubtests()
+		end)()
 	end
 	
 	--Update the bar if there is no tests.
