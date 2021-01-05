@@ -36,3 +36,7 @@ When selecting tests without pressing `Ctrl` or `Shift`, the
 current selected test is deselected. If a test is nested in another
 test, this doesn't happen. This may be a problem with Nexus Plugin
 Framework.
+
+## License
+Nexus Unit Testing Plugin is available under the terms of the MIT 
+License. See [LICENSE](LICENSE) for details.
