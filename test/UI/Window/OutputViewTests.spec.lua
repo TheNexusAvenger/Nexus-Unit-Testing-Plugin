@@ -88,7 +88,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("IsScrollBarAtBottom"):
 	self:AssertFalse(self.CuT:IsScrollBarAtBottom())
 	
 	--Scroll the frame to the bottom and assert it is at the bottom.
-	self.CuT.ScrollingFrame.CanvasPosition = Vector2.new(0,((4 * 17) + 16) - 60)
+	self.CuT.ScrollingFrame.CanvasPosition = Vector2.new(0,(5 * 17) - 60)
 	self:AssertTrue(self.CuT:IsScrollBarAtBottom())
 	
 	--Reduce the max length and assert the scroll bar position changed.
@@ -101,7 +101,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("IsScrollBarAtBottom"):
 	self.CuT.MaxLineWidth = 250
 	self.CuT:UpdateScrollBarSizes()
 	self:AssertTrue(self.CuT:IsScrollBarAtBottom())
-	self:AssertEquals(self.CuT.ScrollingFrame.CanvasPosition.Y,((4 * 17) + 16) - 60,"Scroll bar wasn't changed.")
+	self:AssertEquals(self.CuT.ScrollingFrame.CanvasPosition.Y,(5 * 17) - 60,"Scroll bar wasn't changed.")
 end))
 
 --[[
