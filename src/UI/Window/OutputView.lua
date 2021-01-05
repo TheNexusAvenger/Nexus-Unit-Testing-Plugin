@@ -38,8 +38,6 @@ function OutputView:__new()
 	--Store the output data.
 	self:__SetChangedOverride("OutputLines",function() end)
 	self.OutputLines = {}
-	self:__SetChangedOverride("MaxLineWidth",function() end)
-	self.MaxLineWidth = 0
 	self:__SetChangedOverride("TestEvents",function() end)
 	self.TestEvents = {}
 	
@@ -93,6 +91,11 @@ function OutputView:__new()
 	OutputContainer.Parent = OutputClips
 	self:__SetChangedOverride("OutputContainer",function() end)
 	self.OutputContainer = OutputContainer
+	
+	self:__SetChangedOverride("MaxLineWidth",function()
+		OutputContainer.Size = UDim2.new(0,math.max(100,self.MaxLineWidth),1,0)
+	end)
+	self.MaxLineWidth = 0
 	
 	--Connect the events.
 	ScrollingFrame:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
