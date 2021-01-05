@@ -115,6 +115,12 @@ Returns if the scroll bar is at the bottom.
 Returns false if the scroll bar doesn't exist.
 --]]
 function OutputView:IsScrollBarAtBottom()
+	--Return if there is not enough lines.
+	if self.ScrollingFrame.AbsoluteWindowSize.Y >= #self.OutputLines * LINE_HEIGHT_PIXELS then
+		return false
+	end
+
+	--Return if the scroll bar is at the bottom.
 	return self.ScrollingFrame.CanvasPosition.Y ~= 0 and self.ScrollingFrame.CanvasPosition.Y + self.ScrollingFrame.AbsoluteWindowSize.Y == #self.OutputLines * LINE_HEIGHT_PIXELS
 end
 
