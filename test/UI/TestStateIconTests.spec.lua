@@ -67,6 +67,22 @@ NexusUnitTesting:RegisterUnitTest(TestStateIconUnitTest.new("TestState"):SetRun(
 	self:AssertEquals(self.CuT.ImageRectOffset,Vector2.new(0,256),"Spritesheet image position is incorrect.")
 end))
 
+--[[
+Tests setting the HasOutput.
+--]]
+NexusUnitTesting:RegisterUnitTest(TestStateIconUnitTest.new("HasOutput"):SetRun(function(self)
+	--Assert the indicator isn't visible by default.
+	self:AssertFalse(self.CuT.OutputIndicator.Visible,"Indicator is visible.")
+
+	--Set that there is output and assert the indicator is visible.
+	self.CuT.HasOutput = true
+	self:AssertTrue(self.CuT.OutputIndicator.Visible,"Indicator is not visible.")
+
+	--Set that there is not output and assert the indicator is not visible.
+	self.CuT.HasOutput = false
+	self:AssertFalse(self.CuT.OutputIndicator.Visible,"Indicator is visible.")
+end))
+
 
 
 return true

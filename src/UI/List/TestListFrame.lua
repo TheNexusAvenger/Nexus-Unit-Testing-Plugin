@@ -62,6 +62,20 @@ function TestListFrame:__new(Test)
 		NewListFrame.Parent = self:GetCollapsableContainer()
 	end
 	
+	--Connect the test outputting.
+	if #Test.Output > 0 then
+		Icon.HasOutput = true
+	else
+		local MessageOutputtedEvent
+		MessageOutputtedEvent = Test.MessageOutputted:Connect(function()
+			Icon.HasOutput = true
+			if MessageOutputtedEvent then
+				MessageOutputtedEvent:Disconnect()
+				MessageOutputtedEvent = nil
+			end
+		end)
+	end
+
 	--Connect changing the test state.
 	local TestStartTime = 0
 	Test:GetPropertyChangedSignal("CombinedState"):Connect(function()

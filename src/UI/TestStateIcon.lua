@@ -25,7 +25,8 @@ local ICON_COLORS = {
 	[NexusUnitTesting.TestState.Skipped] = Color3.new(220/255,220/255,0),
 }
 
-local TestStateIcon = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance"):Extend()
+local NexusWrappedInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance")
+local TestStateIcon = NexusWrappedInstance:Extend()
 TestStateIcon:SetClassName("TestStateIcon")
 
 
@@ -42,11 +43,30 @@ function TestStateIcon:__new()
 		self.ImageRectOffset = ICON_POSITIONS[self.TestState]
 	end)
 	
+	--Add an indicator for if there is any output.
+	local OutputIndicator = NexusWrappedInstance.new("Frame")
+	OutputIndicator.BackgroundColor3 = Color3.new(0,170/255,255/255)
+	OutputIndicator.Size = UDim2.new(0.5,0,0.5,0)
+	OutputIndicator.Position = UDim2.new(0.5,0,0.5,0)
+	OutputIndicator.Parent = self
+
+	local UICorner = NexusWrappedInstance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(0.5,0)
+	UICorner.Parent = OutputIndicator
+	self:__SetChangedOverride("OutputIndicator",function() end)
+	self.OutputIndicator = OutputIndicator
+
+	--Set up showing and hiding the indicator.
+	self:__SetChangedOverride("HasOutput",function()
+		OutputIndicator.Visible = self.HasOutput
+	end)
+
 	--Set the defaults.
 	self.BackgroundTransparency = 1
 	self.Image = TEST_ICON_SPRITESHEET
 	self.ImageRectSize = ICON_SIZE
 	self.TestState = NexusUnitTesting.TestState.NotRun
+	self.HasOutput = false
 end
 
 
