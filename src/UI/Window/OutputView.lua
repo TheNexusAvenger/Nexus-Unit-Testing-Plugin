@@ -224,7 +224,7 @@ function OutputView:UpdateDisplayedOutput()
 		if #self.OutputLines == 0 then
 			FirstOutputLabel.Font = Enum.Font.SourceSansItalic
 			FirstOutputLabel.Text = "No Output"
-			FirstOutputLabel.TextColor = ENUMS_TO_COLORS[Enum.MessageType.MessageOutput]
+			FirstOutputLabel.TextColor3 = ENUMS_TO_COLORS[Enum.MessageType.MessageOutput]
 		else
 			FirstOutputLabel.Font = Enum.Font.SourceSans
 		end
