@@ -217,6 +217,18 @@ function OutputView:UpdateDisplayedOutput()
 			end
 		end
 	end
+
+	--Add a message if there is no output.
+	local FirstOutputLabel = self.OutputLabels[1]
+	if FirstOutputLabel then
+		if #self.OutputLines == 0 then
+			FirstOutputLabel.Font = Enum.Font.SourceSansItalic
+			FirstOutputLabel.Text = "No Output"
+			FirstOutputLabel.TextColor = ENUMS_TO_COLORS[Enum.MessageType.MessageOutput]
+		else
+			FirstOutputLabel.Font = Enum.Font.SourceSans
+		end
+	end
 end
 
 --[[
