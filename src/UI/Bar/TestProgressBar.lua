@@ -121,10 +121,11 @@ function TestProgressBar:UpdateProgressBar()
     self.TotalsTextLabel.Text = tostring(PassedTests).." passed, "..tostring(FailedTests).." failed, "..tostring(SkippedTests).." skipped ("..tostring(TotalTests).." total) "..self.TimeText
 
     --Update the sizes.
-    self.PassedBar.Size = UDim2.new(PassedTests/TotalTests, 0, 1, 0)
-    self.FailedBar.Size = UDim2.new(FailedTests/TotalTests, 0, 1, 0)
-    self.SkippedBar.Size = UDim2.new(SkippedTests/TotalTests, 0, 1, 0)
-    self.FailedBar.Position = UDim2.new(PassedTests/TotalTests, 0, 0, 0)
+    if TotalTests == 0 then TotalTests = 1 end
+    self.PassedBar.Size = UDim2.new(PassedTests / TotalTests, 0, 1, 0)
+    self.FailedBar.Size = UDim2.new(FailedTests / TotalTests, 0, 1, 0)
+    self.SkippedBar.Size = UDim2.new(SkippedTests / TotalTests, 0, 1, 0)
+    self.FailedBar.Position = UDim2.new(PassedTests / TotalTests, 0, 0, 0)
     self.SkippedBar.Position = UDim2.new((PassedTests + FailedTests) / TotalTests, 0, 0, 0)
 end
 
