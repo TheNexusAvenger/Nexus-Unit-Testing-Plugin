@@ -7,7 +7,7 @@ Window for the displaying the output of a test.
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local OutputView = NexusUnitTestingPluginProject:GetResource("UI.Window.OutputView")
 
-local OutputWindow = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Plugin.NexusPluginGui"):Extend()
+local OutputWindow = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance"):Extend()
 OutputWindow:SetClassName("OutputWindow")
 
 
@@ -15,16 +15,15 @@ OutputWindow:SetClassName("OutputWindow")
 --[[
 Creates a Output Window object.
 --]]
-function OutputWindow:__new()
-	self:InitializeSuper("Test Output",DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Bottom,false,false,300,200,200,100))
-	
-	--Add the output frame.
+function OutputWindow:__new(Plugin)
+	self:InitializeSuper(Plugin:CreateDockWidgetPluginGui("Test Output", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Bottom, false, false, 300, 200, 200, 100)))
+	self.Title = "Test Output"
+
+	--Add the output view.
 	local Output = OutputView.new()
-	Output.Size = UDim2.new(1,0,1,0)
+	Output.Size = UDim2.new(1, 0, 1, 0)
 	Output.Parent = self
-	
-	--Store the output view.
-	self:__SetChangedOverride("OutputView",function() end)
+	self:DisableChangeReplication("OutputView")
 	self.OutputView = Output
 end
 

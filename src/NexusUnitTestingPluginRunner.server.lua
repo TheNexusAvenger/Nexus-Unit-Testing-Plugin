@@ -13,7 +13,7 @@ local OutputWindow = NexusUnitTestingPluginProject:GetResource("UI.Window.Output
 
 --Create the window.
 NexusPluginFramework:SetPlugin(plugin)
-local OutputView = OutputWindow.new()
+local OutputView = OutputWindow.new(plugin)
 local TestsLists = TestListWindow.new(OutputView)
 
 --Create the button.
