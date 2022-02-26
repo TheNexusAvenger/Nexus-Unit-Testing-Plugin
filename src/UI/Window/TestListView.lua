@@ -73,6 +73,17 @@ function TestListView:__new()
     self:DisableChangeReplication("TestProgressBar")
     self.TestProgressBar = BottomBar
 
+    --Create the text for no tests.
+    local NoTestsLabel = NexusPluginComponents.new("TextLabel")
+    NoTestsLabel.Size = UDim2.new(1, -32, 0, 16)
+    NoTestsLabel.Position = UDim2.new(0, 31, 0, 2)
+    NoTestsLabel.Visible = false
+    NoTestsLabel.Font = Enum.Font.SourceSansItalic
+    NoTestsLabel.Text = "No tests found. Make sure test ModuleScripts end in .spec or .nexusspec"
+    NoTestsLabel.Parent = self
+    self:DisableChangeReplication("NoTestsLabel")
+    self.NoTestsLabel = NoTestsLabel
+
     --Creating the scrolling frame.
     local ScrollingFrame = NexusPluginComponents.new("ScrollingFrame")
     ScrollingFrame.Size = UDim2.new(1, -29, 1, -29)
@@ -386,6 +397,7 @@ function TestListView:RunTests(Tests)
     if #Tests == 0 then
         self.TestProgressBar:UpdateProgressBar()
     end
+    self.NoTestsLabel.Visible = (#self.Tests.Children == 0)
 end
 
 --[[
