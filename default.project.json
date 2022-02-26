@@ -21,18 +21,6 @@
                         "$path": "module/Nexus-Unit-Testing/module/TestEZ/lib"
                     }
                 },
-                "NexusPluginFramework": {
-                    "$path": "module/Nexus-Plugin-Framework/src",
-                    "NexusInstance": {
-                        "$path": "module/Nexus-Plugin-Framework/module/Nexus-Instance/src"
-                    },
-                    "NexusProject": {
-                        "$path": "module/Nexus-Plugin-Framework/module/Nexus-Project/src",
-                        "NexusInstance": {
-                            "$path": "module/Nexus-Plugin-Framework/module/Nexus-Instance/src"
-                        }
-                    }
-                },
                 "NexusPluginComponents": {
                     "$path": "module/Nexus-Plugin-Components/src",
                     "NexusInstance": {
