@@ -6,7 +6,7 @@ Runs the Nexus Unit Testing Plugin.
 
 local NexusUnitTestingPluginProject = require(script.Parent)
 local NexusPluginFramework = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework")
-local PluginToggleButton = NexusUnitTestingPluginProject:GetResource("UI.PluginToggleButton")
+local PluginToggleButton = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Input.Custom.PluginToggleButton")
 local TestListWindow = NexusUnitTestingPluginProject:GetResource("UI.Window.TestListWindow")
 local OutputWindow = NexusUnitTestingPluginProject:GetResource("UI.Window.OutputWindow")
 
@@ -17,8 +17,9 @@ local OutputView = OutputWindow.new(plugin)
 local TestsLists = TestListWindow.new(OutputView)
 
 --Create the button.
-local NexusWidgetsToolbar = NexusPluginFramework.new("PluginToolbar","Nexus Widgets")
-local NexusUnitTestingButton = PluginToggleButton.new(NexusWidgetsToolbar,"Unit Tests","Opens the Nexus Unit Testing window","http://www.roblox.com/asset/?id=4734891702",TestsLists)
+local NexusWidgetsToolbar = plugin:CreateToolbar("Nexus Widgets")
+local NexusUnitTestsPlugin = NexusWidgetsToolbar:CreateButton("Unit Tests", "Opens the Nexus Unit Testing window", "http://www.roblox.com/asset/?id=4734891702")
+local NexusUnitTestingButton = PluginToggleButton.new(NexusUnitTestsPlugin, TestsLists)
 NexusUnitTestingButton.ClickableWhenViewportHidden = true
 
 --Create the actions.
