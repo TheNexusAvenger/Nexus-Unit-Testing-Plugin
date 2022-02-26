@@ -8,65 +8,67 @@ local NexusUnitTestingPluginProject = require(script.Parent.Parent)
 local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
 
 local TEST_ICON_SPRITESHEET = "http://www.roblox.com/asset/?id=4595118527"
-local ICON_SIZE = Vector2.new(256,256)
+local ICON_SIZE = Vector2.new(256, 256)
 
 local ICON_POSITIONS = {
-	[NexusUnitTesting.TestState.NotRun] = Vector2.new(0,0),
-	[NexusUnitTesting.TestState.InProgress] = Vector2.new(256,0),
-	[NexusUnitTesting.TestState.Passed] = Vector2.new(512,0),
-	[NexusUnitTesting.TestState.Failed] = Vector2.new(768,0),
-	[NexusUnitTesting.TestState.Skipped] = Vector2.new(0,256),
+    [NexusUnitTesting.TestState.NotRun] = Vector2.new(0, 0),
+    [NexusUnitTesting.TestState.InProgress] = Vector2.new(256, 0),
+    [NexusUnitTesting.TestState.Passed] = Vector2.new(512, 0),
+    [NexusUnitTesting.TestState.Failed] = Vector2.new(768, 0),
+    [NexusUnitTesting.TestState.Skipped] = Vector2.new(0, 256),
 }
 local ICON_COLORS = {
-	[NexusUnitTesting.TestState.NotRun] = Color3.new(0,170/255,255/255),
-	[NexusUnitTesting.TestState.InProgress] = Color3.new(255/255,150/255,0),
-	[NexusUnitTesting.TestState.Passed] = Color3.new(0,200/255,0),
-	[NexusUnitTesting.TestState.Failed] = Color3.new(200/255,0,0),
-	[NexusUnitTesting.TestState.Skipped] = Color3.new(220/255,220/255,0),
+    [NexusUnitTesting.TestState.NotRun] = Color3.new(0, 170/255, 255/255),
+    [NexusUnitTesting.TestState.InProgress] = Color3.new(255/255, 150/255, 0),
+    [NexusUnitTesting.TestState.Passed] = Color3.new(0, 200/255, 0),
+    [NexusUnitTesting.TestState.Failed] = Color3.new(200/255, 0, 0),
+    [NexusUnitTesting.TestState.Skipped] = Color3.new(220/255, 220/255, 0),
 }
 
-local NexusWrappedInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginFramework.Base.NexusWrappedInstance")
-local TestStateIcon = NexusWrappedInstance:Extend()
+local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local TestStateIcon = PluginInstance:Extend()
 TestStateIcon:SetClassName("TestStateIcon")
 
 
 
 --[[
-Creates a Test State Icon.
+Creates the Test State Icon.
 --]]
 function TestStateIcon:__new()
-	self:InitializeSuper("ImageLabel")
-	
-	--Set up changing the test state.
-	self:__SetChangedOverride("TestState",function()
-		self.ImageColor3 = ICON_COLORS[self.TestState]
-		self.ImageRectOffset = ICON_POSITIONS[self.TestState]
-	end)
-	
-	--Add an indicator for if there is any output.
-	local OutputIndicator = NexusWrappedInstance.new("Frame")
-	OutputIndicator.BackgroundColor3 = Color3.new(0,170/255,255/255)
-	OutputIndicator.Size = UDim2.new(0.5,0,0.5,0)
-	OutputIndicator.Position = UDim2.new(0.5,0,0.5,0)
-	OutputIndicator.Parent = self
+    self:InitializeSuper("ImageLabel")
 
-	local UICorner = NexusWrappedInstance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(0.5,0)
-	UICorner.Parent = OutputIndicator
-	self:__SetChangedOverride("OutputIndicator",function() end)
-	self.OutputIndicator = OutputIndicator
+    --Set up changing the test state.
+	self:DisableChangeReplication("TestState")
+	self:GetPropertyChangedSignal("TestState"):Connect(function()
+        self.ImageColor3 = ICON_COLORS[self.TestState]
+        self.ImageRectOffset = ICON_POSITIONS[self.TestState]
+    end)
 
-	--Set up showing and hiding the indicator.
-	self:__SetChangedOverride("HasOutput",function()
+    --Add an indicator for if there is any output.
+    local OutputIndicator = PluginInstance.new("Frame")
+    OutputIndicator.BackgroundColor3 = Color3.new(0, 170/255, 255/255)
+    OutputIndicator.Size = UDim2.new(0.5, 0, 0.5, 0)
+    OutputIndicator.Position = UDim2.new(0.5, 0, 0.5, 0)
+    OutputIndicator.Parent = self
+
+    local UICorner = PluginInstance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0.5, 0)
+    UICorner.Parent = OutputIndicator
+	self:DisableChangeReplication("OutputIndicator")
+    self.OutputIndicator = OutputIndicator
+
+    --Set up showing and hiding the indicator.
+	self:DisableChangeReplication("HasOutput")
+	self:GetPropertyChangedSignal("HasOutput"):Connect(function()
 		OutputIndicator.Visible = self.HasOutput
 	end)
 
-	--Set the defaults.
-	self.BackgroundTransparency = 1
-	self.Image = TEST_ICON_SPRITESHEET
-	self.ImageRectSize = ICON_SIZE
-	self.TestState = NexusUnitTesting.TestState.NotRun
-	self.HasOutput = false
+    --Set the defaults.
+    self.BackgroundTransparency = 1
+    self.Image = TEST_ICON_SPRITESHEET
+    self.ImageRectSize = ICON_SIZE
+    self.TestState = NexusUnitTesting.TestState.NotRun
+    self.HasOutput = false
 end
 
 

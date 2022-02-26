@@ -30,10 +30,9 @@ function TestProgressBar:__new()
 	
 	--Create the icon.
 	local Icon = TestStateIcon.new()
-	Icon.Hidden = true
 	Icon.Size = UDim2.new(0,16,0,16)
 	Icon.Position = UDim2.new(0,6,0,6)
-	Icon.Parent = self
+	Icon.Parent = self:GetWrappedInstance()
 	self:__SetChangedOverride("Icon",function() end)
 	self.Icon = Icon
 	

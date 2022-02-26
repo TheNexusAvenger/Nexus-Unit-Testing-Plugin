@@ -28,11 +28,10 @@ function TestListFrame:__new(Test)
 	
 	--Create the icon.
 	local Icon = TestStateIcon.new()
-	Icon.Hidden = true
 	Icon.Size = UDim2.new(0,16,0,16)
 	Icon.Position = UDim2.new(0,2,0,2)
 	Icon.TestState = Test.CombinedState
-	Icon.Parent = self:GetMainContainer()
+	Icon.Parent = self:GetMainContainer():GetWrappedInstance()
 	
 	--Create the text for the test name and time.
 	local TestNameLabel = NexusPluginFramework.new("TextLabel")
