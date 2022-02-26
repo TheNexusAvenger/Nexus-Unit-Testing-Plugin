@@ -23,6 +23,8 @@ local SERVICES_WITH_TESTS = {
 
 
 
+local TextService = game:GetService("TextService")
+
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local ButtonSideBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.ButtonSideBar")
 local TestProgressBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.TestProgressBar")
@@ -147,7 +149,16 @@ end
 Updates the view of tests.
 --]]
 function TestListView:TestsUpdated()
-    self.ElementList:SetEntries(self.Tests:GetDescendants())
+    --Set the element list.
+    local Tests = self.Tests:GetDescendants()
+    self.ElementList:SetEntries(Tests)
+
+    --Update the max width.
+    local MaxWidth = 100
+    for _, Entry in pairs(Tests) do
+        MaxWidth = math.max(MaxWidth, (20 * (Entry.Indent - 1)) + Entry.EntryWidth)
+    end
+    self.ElementList.CurrentWidth = MaxWidth
 end
 
 --[[
@@ -314,6 +325,8 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
     --Set the full name.
     local FullName = BaseFullName..Test.Name
     Test.FullName = FullName
+    Entry.DurationPosition = 22 + 4 + TextService:GetTextSize(Test.Name, 14, Enum.Font.SourceSans, Vector2.new(2000, 16)).X
+    Entry.EntryWidth = Entry.DurationPosition
 
     --Select the list frame if it was selected before.
     if self.SelectedTestsNames[FullName] then
@@ -328,6 +341,7 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
         elseif Test.CombinedState ~= NexusUnitTesting.TestState.NotRun then
             if TestStartTime ~= 0 then
                 Entry.Duration = tick() - TestStartTime
+                Entry.EntryWidth = Entry.EntryWidth + TextService:GetTextSize(string.format("%.3f", Entry.Duration).." seconds" or "", 14, Enum.Font.SourceSans, Vector2.new(2000, 16)).X + 4
             end
         end
         self:TestsUpdated()

@@ -4,8 +4,6 @@ TheNexusAvenger
 Frame for showing and selecting tests.
 --]]
 
-local TextService = game:GetService("TextService")
-
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
 local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
@@ -64,7 +62,7 @@ function TestListFrame:Update(Data)
     self.Icon.HasOutput = Data.HasOutput
     self.TestNameLabel.Text = Test.Name
     self.TestTimeLabel.Text = Data.Duration and string.format("%.3f", Data.Duration).." seconds" or ""
-    self.TestTimeLabel.Position = UDim2.new(0, 22 + 4 + TextService:GetTextSize(Test.Name, self.TestNameLabel.TextSize, self.TestNameLabel.Font, Vector2.new(2000, 16)).X, 0, 1)
+    self.TestTimeLabel.Position = UDim2.new(0, Data.DurationPosition, 0, 1)
 
     --Update if the frame is selected.
     if not self.TestListView or not Test.FullName then return end
