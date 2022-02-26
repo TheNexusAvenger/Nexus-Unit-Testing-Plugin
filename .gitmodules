@@ -7,3 +7,6 @@
 [submodule "module/Nexus-Project"]
 	path = module/Nexus-Project
 	url = https://github.com/TheNexusAvenger/Nexus-Project.git
+[submodule "module/Nexus-Plugin-Components"]
+	path = module/Nexus-Plugin-Components
+	url = https://github.com/TheNexusAvenger/Nexus-Plugin-Components.git

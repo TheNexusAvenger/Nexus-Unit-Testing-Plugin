@@ -33,6 +33,24 @@
                         }
                     }
                 },
+                "NexusPluginComponents": {
+                    "$path": "module/Nexus-Plugin-Components/src",
+                    "NexusInstance": {
+                        "$path": "module/Nexus-Plugin-Components/module/Nexus-Instance/src"
+                    },
+                    "NexusProject": {
+                        "$path": "module/Nexus-Plugin-Components/module/Nexus-Project/src",
+                        "NexusInstance": {
+                            "$path": "module/Nexus-Plugin-Components/module/Nexus-Instance/src"
+                        }
+                    },
+                    "NexusWrappedInstance": {
+                        "$path": "module/Nexus-Plugin-Components/module/Nexus-Wrapped-Instance/src",
+                        "NexusInstance": {
+                            "$path": "module/Nexus-Plugin-Components/module/Nexus-Instance/src"
+                        }
+                    }
+                },
                 "NexusProject": {
                     "$path": "module/Nexus-Project/src",
                     "NexusInstance": {
