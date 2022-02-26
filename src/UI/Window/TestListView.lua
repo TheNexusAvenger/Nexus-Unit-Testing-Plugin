@@ -62,16 +62,14 @@ function TestListView:__new()
 	
 	--Create the bars.
 	local SideBar = ButtonSideBar.new()
-	SideBar.Hidden = true
-	SideBar.Parent = self
+	SideBar.Parent = self:GetWrappedInstance()
 	self:__SetChangedOverride("ButtonSideBar",function() end)
 	self.ButtonSideBar = SideBar
 	
 	local BottomBar = TestProgressBar.new()
-	BottomBar.Hidden = true
 	BottomBar.Size = UDim2.new(1,-29,0,28)
 	BottomBar.Position = UDim2.new(0,29,1,-28)
-	BottomBar.Parent = self
+	BottomBar.Parent = self:GetWrappedInstance()
 	self:__SetChangedOverride("TestProgressBar",function() end)
 	self.TestProgressBar = BottomBar
 	
