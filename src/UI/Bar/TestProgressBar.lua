@@ -22,9 +22,9 @@ function TestProgressBar:__new()
     self:InitializeSuper("Frame")
 
     --Store the tests.
-	self:DisableChangeReplication("TimeText")
-	self:DisableChangeReplication("Tests")
-	self:DisableChangeReplication("TestEvents")
+    self:DisableChangeReplication("TimeText")
+    self:DisableChangeReplication("Tests")
+    self:DisableChangeReplication("TestEvents")
     self.TimeText = ""
     self.Tests = {}
     self.TestEvents = {}

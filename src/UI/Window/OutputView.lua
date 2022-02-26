@@ -66,16 +66,16 @@ function OutputView:__new()
     self:DisableChangeReplication("ScrollingFrame")
     self.ScrollingFrame = ScrollingFrame
 
-	local ElementList = NexusPluginComponents.new("ElementList", OutputTextEntry)
-	ElementList.EntryHeight = LINE_HEIGHT_PIXELS
-	ElementList:ConnectScrollingFrame(ScrollingFrame)
+    local ElementList = NexusPluginComponents.new("ElementList", OutputTextEntry)
+    ElementList.EntryHeight = LINE_HEIGHT_PIXELS
+    ElementList:ConnectScrollingFrame(ScrollingFrame)
     self:DisableChangeReplication("ElementList")
     self.ElementList = ElementList
 
     self:DisableChangeReplication("MaxLineWidth")
-	self:GetPropertyChangedSignal("MaxLineWidth"):Connect(function()
-		ElementList.CurrentWidth = math.max(100, self.MaxLineWidth)
-	end)
+    self:GetPropertyChangedSignal("MaxLineWidth"):Connect(function()
+        ElementList.CurrentWidth = math.max(100, self.MaxLineWidth)
+    end)
     self.MaxLineWidth = 0
 
     --Set the defaults.
@@ -86,11 +86,11 @@ end
 Updates the displayed output.
 --]]
 function OutputView:UpdateDisplayedOutput()
-	if #self.OutputLines == 0 then
-		self.ElementList:SetEntries({{"No Output"}})
-	else
-		self.ElementList:SetEntries(self.OutputLines)
-	end
+    if #self.OutputLines == 0 then
+        self.ElementList:SetEntries({{"No Output"}})
+    else
+        self.ElementList:SetEntries(self.OutputLines)
+    end
 end
 
 --[[

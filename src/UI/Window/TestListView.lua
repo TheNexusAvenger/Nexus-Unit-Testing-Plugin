@@ -326,7 +326,7 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
     if #Test.Output > 0 then
         Entry.HasOutput = true
     else
-		Entry.HasOutput = false
+        Entry.HasOutput = false
         local MessageOutputtedEvent
         MessageOutputtedEvent = Test.MessageOutputted:Connect(function()
             Entry.HasOutput = true
@@ -343,14 +343,14 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
     Test.TestAdded:Connect(function(NewTest)
         local NewEntry = Entry:CreateChild()
         NewEntry.Test = NewTest
-		self:ConnectTest(NewTest, NewEntry, RootTest, FullName.." > ")
+        self:ConnectTest(NewTest, NewEntry, RootTest, FullName.." > ")
     end)
 
     --Add the existing subtests.
     for _, NewTest in pairs(Test.SubTests) do
         local NewEntry = Entry:CreateChild()
         NewEntry.Test = NewTest
-		self:ConnectTest(NewTest, NewEntry, RootTest, FullName.." > ")
+        self:ConnectTest(NewTest, NewEntry, RootTest, FullName.." > ")
     end
 
     --Open the output window if the test name matches (test is rerunning).
@@ -394,9 +394,9 @@ Registers a ModuleScript unit test.
 function TestListView:RegisterTest(ModuleScriptTest)
     --Remove the existing entry if it exists.
     if self.ModuleScriptsToEntry[ModuleScriptTest.ModuleScript] then
-		local Entry = self.ModuleScriptsToEntry[ModuleScriptTest.ModuleScript]
+        local Entry = self.ModuleScriptsToEntry[ModuleScriptTest.ModuleScript]
         self.Tests:RemoveChild(Entry)
-		self.TestProgressBar:RemoveUnitTest(Entry.Test, true)
+        self.TestProgressBar:RemoveUnitTest(Entry.Test, true)
     end
 
     --Create the child entry.

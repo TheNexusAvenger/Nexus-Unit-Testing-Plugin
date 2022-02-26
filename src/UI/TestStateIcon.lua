@@ -38,8 +38,8 @@ function TestStateIcon:__new()
     self:InitializeSuper("ImageLabel")
 
     --Set up changing the test state.
-	self:DisableChangeReplication("TestState")
-	self:GetPropertyChangedSignal("TestState"):Connect(function()
+    self:DisableChangeReplication("TestState")
+    self:GetPropertyChangedSignal("TestState"):Connect(function()
         self.ImageColor3 = ICON_COLORS[self.TestState]
         self.ImageRectOffset = ICON_POSITIONS[self.TestState]
     end)
@@ -54,14 +54,14 @@ function TestStateIcon:__new()
     local UICorner = PluginInstance.new("UICorner")
     UICorner.CornerRadius = UDim.new(0.5, 0)
     UICorner.Parent = OutputIndicator
-	self:DisableChangeReplication("OutputIndicator")
+    self:DisableChangeReplication("OutputIndicator")
     self.OutputIndicator = OutputIndicator
 
     --Set up showing and hiding the indicator.
-	self:DisableChangeReplication("HasOutput")
-	self:GetPropertyChangedSignal("HasOutput"):Connect(function()
-		OutputIndicator.Visible = self.HasOutput
-	end)
+    self:DisableChangeReplication("HasOutput")
+    self:GetPropertyChangedSignal("HasOutput"):Connect(function()
+        OutputIndicator.Visible = self.HasOutput
+    end)
 
     --Set the defaults.
     self.BackgroundTransparency = 1
