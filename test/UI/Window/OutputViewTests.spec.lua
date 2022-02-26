@@ -25,6 +25,7 @@ function OutputViewUnitTest:Setup()
     self.CuTParent = Instance.new("ScreenGui")
     self.CuTParent.Parent = game:GetService("Lighting")
     self.CuT.Parent = self.CuTParent
+	wait()
 end
 
 --[[

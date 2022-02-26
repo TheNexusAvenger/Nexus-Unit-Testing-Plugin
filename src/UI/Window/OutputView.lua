@@ -80,6 +80,7 @@ function OutputView:__new()
 
     --Set the defaults.
     self.Size = UDim2.new(1, 0, 1, 0)
+    self.ElementList:SetEntries({{"No Test Selected"}})
 end
 
 --[[
