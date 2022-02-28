@@ -410,6 +410,7 @@ function TestListView:RunTests(Tests)
     --Update the bar if there is no tests.
     if #Tests == 0 then
         self.TestProgressBar:UpdateProgressBar()
+        self:TestsUpdated()
     end
     self.NoTestsLabel.Visible = (#self.Tests.Children == 0)
 end
