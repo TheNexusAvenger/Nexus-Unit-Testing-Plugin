@@ -7,43 +7,13 @@
             "NexusUnitTestingPlugin": {
                 "$path": "src",
                 "NexusUnitTestingModule": {
-                    "$path": "module/Nexus-Unit-Testing/src",
-                    "NexusInstance": {
-                        "$path": "module/Nexus-Unit-Testing/module/Nexus-Instance/src"
-                    },
-                    "NexusProject": {
-                        "$path": "module/Nexus-Unit-Testing/module/Nexus-Project/src",
-                        "NexusInstance": {
-                            "$path": "module/Nexus-Unit-Testing/module/Nexus-Instance/src"
-                        }
-                    },
-                    "TestEZ": {
-                        "$path": "module/Nexus-Unit-Testing/module/TestEZ/lib"
-                    }
+                    "$path": "module/Nexus-Unit-Testing/"
                 },
                 "NexusPluginComponents": {
-                    "$path": "module/Nexus-Plugin-Components/src",
-                    "NexusInstance": {
-                        "$path": "module/Nexus-Plugin-Components/module/Nexus-Instance/src"
-                    },
-                    "NexusProject": {
-                        "$path": "module/Nexus-Plugin-Components/module/Nexus-Project/src",
-                        "NexusInstance": {
-                            "$path": "module/Nexus-Plugin-Components/module/Nexus-Instance/src"
-                        }
-                    },
-                    "NexusWrappedInstance": {
-                        "$path": "module/Nexus-Plugin-Components/module/Nexus-Wrapped-Instance/src",
-                        "NexusInstance": {
-                            "$path": "module/Nexus-Plugin-Components/module/Nexus-Instance/src"
-                        }
-                    }
+                    "$path": "module/Nexus-Plugin-Components/"
                 },
                 "NexusProject": {
-                    "$path": "module/Nexus-Project/src",
-                    "NexusInstance": {
-                        "$path": "module/Nexus-Project/module/Nexus-Instance/src"
-                    }
+                    "$path": "module/Nexus-Project/"
                 }
             },
             "NexusUnitTestingPluginTests": {
