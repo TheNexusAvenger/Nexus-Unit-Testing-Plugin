@@ -80,7 +80,7 @@ function OutputView:__new()
 
     --Set the defaults.
     self.Size = UDim2.new(1, 0, 1, 0)
-    self.ElementList:SetEntries({{"No Test Selected"}})
+    self.ElementList:SetEntries({{Message="No Test Selected"}})
 end
 
 --[[
@@ -88,7 +88,7 @@ Updates the displayed output.
 --]]
 function OutputView:UpdateDisplayedOutput()
     if #self.OutputLines == 0 then
-        self.ElementList:SetEntries({{"No Output"}})
+        self.ElementList:SetEntries({{Message="No Output"}})
     else
         self.ElementList:SetEntries(self.OutputLines)
     end
@@ -107,7 +107,7 @@ function OutputView:ProcessOutput(String, Type)
     end
 
     --Add the string.
-    table.insert(self.OutputLines, {String,Type})
+    table.insert(self.OutputLines, {Message = String, Type = Type})
 
     --Update the max size.
     local StringWidth = TextService:GetTextSize(String, 14, Enum.Font.SourceSans, Vector2.new(2000, LINE_HEIGHT_PIXELS)).X + (TEXT_MARGIN_PIXELS * 2)
@@ -149,7 +149,7 @@ function OutputView:SetTest(Test)
 
     --Add the existing output.
     for _, Output in pairs(Test.Output) do
-        self:ProcessOutput(Output[1], Output[2])
+        self:ProcessOutput(Output.Message, Output.Type)
     end
     self:UpdateDisplayedOutput()
 

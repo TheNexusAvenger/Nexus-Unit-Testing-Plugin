@@ -42,9 +42,9 @@ Updates the text.
 --]]
 function OutputView:Update(Data)
     if Data then
-        self.TextLabel.Text = Data[1]
-        if Data[2] then
-            self.TextLabel.TextColor3 = ENUMS_TO_COLORS[Data[2]]
+        self.TextLabel.Text = Data.Message
+        if Data.Type then
+            self.TextLabel.TextColor3 = ENUMS_TO_COLORS[Data.Type]
             self.TextLabel.Font = Enum.Font.SourceSans
         else
             self.TextLabel.TextColor3 = Enum.StudioStyleGuideColor.MainText

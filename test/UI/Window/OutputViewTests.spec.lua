@@ -62,7 +62,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("UpdateDisplayedOutput"
     self:AssertEquals(OutputLabels[3].Text, "", "Text is incorrect.")
 
     --Set the output as having not enough lines and assert the text is correct.
-    self.CuT.OutputLines = {{"String 1", Enum.MessageType.MessageOutput}, {"String 2", Enum.MessageType.MessageWarning}}
+    self.CuT.OutputLines = {{Message="String 1", Type=Enum.MessageType.MessageOutput}, {Message="String 2", Type=Enum.MessageType.MessageWarning}}
     self.CuT:UpdateDisplayedOutput()
     self:AssertEquals(OutputLabels[1].Text, "String 1", "Text is incorrect.")
     self:AssertEquals(OutputLabels[1].Font, Enum.Font.SourceSans, "Font is incorrect.")
@@ -72,7 +72,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("UpdateDisplayedOutput"
     self:AssertEquals(OutputLabels[2].TextColor3.ColorEnum, Enum.StudioStyleGuideColor.WarningText, "Text color is incorrect.")
 
     --Set the output as having more than enough lines and assert the text is correct.
-    self.CuT.OutputLines = {{"String 1", Enum.MessageType.MessageOutput}, {"String 2", Enum.MessageType.MessageWarning}, {"String 3", Enum.MessageType.MessageError}, {"String 4", Enum.MessageType.MessageInfo}, {"String 5", Enum.MessageType.MessageInfo}}
+    self.CuT.OutputLines = {{Message="String 1", Type=Enum.MessageType.MessageOutput}, {Message="String 2", Type=Enum.MessageType.MessageWarning}, {Message="String 3", Type=Enum.MessageType.MessageError}, {Message="String 4", Type=Enum.MessageType.MessageInfo}, {Message="String 5", Type=Enum.MessageType.MessageInfo}}
     self.CuT:UpdateDisplayedOutput()
     self:AssertEquals(OutputLabels[1].Text, "String 1", "Text is incorrect.")
     self:AssertEquals(OutputLabels[1].Font, Enum.Font.SourceSans, "Font is incorrect.")
@@ -84,7 +84,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("UpdateDisplayedOutput"
 
     --Set the canvas position as nearly scrolled and assert that the correct lines show.
     self.CuT.ScrollingFrame.CanvasPosition = Vector2.new(0, 10)
-    self.CuT.OutputLines = {{"String 1", Enum.MessageType.MessageOutput}, {"String 2", Enum.MessageType.MessageWarning}, {"String 3", Enum.MessageType.MessageError}, {"String 4", Enum.MessageType.MessageInfo}, {"String 5", Enum.MessageType.MessageInfo}}
+    self.CuT.OutputLines = {{Message="String 1", Type=Enum.MessageType.MessageOutput}, {Message="String 2", Type=Enum.MessageType.MessageWarning}, {Message="String 3", Type=Enum.MessageType.MessageError}, {Message="String 4", Type=Enum.MessageType.MessageInfo}, {Message="String 5", Type=Enum.MessageType.MessageInfo}}
     self.CuT:UpdateDisplayedOutput()
     self:AssertEquals(OutputLabels[1].Text, "String 1", "Text is incorrect.")
     self:AssertEquals(OutputLabels[1].Font, Enum.Font.SourceSans, "Font is incorrect.")
@@ -96,7 +96,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("UpdateDisplayedOutput"
 
     --Set the canvas position as scrolled and assert that the correct lines show.
     self.CuT.ScrollingFrame.CanvasPosition = Vector2.new(0, 20)
-    self.CuT.OutputLines = {{"String 1", Enum.MessageType.MessageOutput}, {"String 2", Enum.MessageType.MessageWarning}, {"String 3", Enum.MessageType.MessageError}, {"String 4", Enum.MessageType.MessageInfo}, {"String 5", Enum.MessageType.MessageInfo}}
+    self.CuT.OutputLines = {{Message="String 1", Type=Enum.MessageType.MessageOutput}, {Message="String 2", Type=Enum.MessageType.MessageWarning}, {Message="String 3", Type=Enum.MessageType.MessageError}, {Message="String 4", Type=Enum.MessageType.MessageInfo}, {Message="String 5", Type=Enum.MessageType.MessageInfo}}
     self.CuT:UpdateDisplayedOutput()
     self:AssertEquals(OutputLabels[1].Text, "String 2", "Text is incorrect.")
     self:AssertEquals(OutputLabels[1].Font, Enum.Font.SourceSans, "Font is incorrect.")
@@ -108,7 +108,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("UpdateDisplayedOutput"
 
     --Set the canvas position to the bottom and assert that the correct lines show.
     self.CuT.ScrollingFrame.CanvasPosition = Vector2.new(0, (17 * 5) - 50)
-    self.CuT.OutputLines = {{"String 1", Enum.MessageType.MessageOutput}, {"String 2", Enum.MessageType.MessageWarning}, {"String 3", Enum.MessageType.MessageError}, {"String 4", Enum.MessageType.MessageInfo}, {"String 5", Enum.MessageType.MessageInfo}}
+    self.CuT.OutputLines = {{Message="String 1", Type=Enum.MessageType.MessageOutput}, {Message="String 2", Type=Enum.MessageType.MessageWarning}, {Message="String 3", Type=Enum.MessageType.MessageError}, {Message="String 4", Type=Enum.MessageType.MessageInfo}, {Message="String 5", Type=Enum.MessageType.MessageInfo}}
     self.CuT:UpdateDisplayedOutput()
     self:AssertEquals(OutputLabels[1].Text, "String 3", "Text is incorrect.")
     self:AssertEquals(OutputLabels[1].Font, Enum.Font.SourceSans, "Font is incorrect.")
@@ -126,7 +126,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("AddOutput"):SetRun(fun
     --Add an empty string and assert the output is correct.
     self.CuT:AddOutput("", Enum.MessageType.MessageOutput)
     local OutputLabels = self:GetLabels()
-    self:AssertEquals(self.CuT.OutputLines, {{"", Enum.MessageType.MessageOutput}}, "Stored output is incorrect.")
+    self:AssertEquals(self.CuT.OutputLines, {{Message="", Type=Enum.MessageType.MessageOutput}}, "Stored output is incorrect.")
     self:AssertEquals(OutputLabels[1].Text, "", "Text is incorrect.")
     self:AssertEquals(OutputLabels[2].Text, "", "Text is incorrect.")
     self:AssertEquals(OutputLabels[3].Text, "", "Text is incorrect.")
@@ -134,7 +134,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("AddOutput"):SetRun(fun
 
     --Add a string and assert the output is correct.
     self.CuT:AddOutput("String 1", Enum.MessageType.MessageWarning)
-    self:AssertEquals(self.CuT.OutputLines,{{"" ,Enum.MessageType.MessageOutput}, {"String 1", Enum.MessageType.MessageWarning}}, "Stored output is incorrect.")
+    self:AssertEquals(self.CuT.OutputLines,{{Message="" ,Type=Enum.MessageType.MessageOutput}, {Message="String 1", Type=Enum.MessageType.MessageWarning}}, "Stored output is incorrect.")
     self:AssertEquals(OutputLabels[1].Text, "", "Text is incorrect.")
     self:AssertEquals(OutputLabels[2].Text, "String 1", "Text is incorrect.")
     self:AssertEquals(OutputLabels[3].Text, "", "Text is incorrect.")
@@ -143,7 +143,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("AddOutput"):SetRun(fun
 
     --Add a string with a new line and assert the output is correct.
     self.CuT:AddOutput("String 2\nString 3\n", Enum.MessageType.MessageOutput)
-    self:AssertEquals(self.CuT.OutputLines,{{"", Enum.MessageType.MessageOutput}, {"String 1", Enum.MessageType.MessageWarning}, {"String 2", Enum.MessageType.MessageOutput}, {"String 3", Enum.MessageType.MessageOutput}, {"", Enum.MessageType.MessageOutput}}, "Stored output is incorrect.")
+    self:AssertEquals(self.CuT.OutputLines,{{Message="", Type=Enum.MessageType.MessageOutput}, {Message="String 1", Type=Enum.MessageType.MessageWarning}, {Message="String 2", Type=Enum.MessageType.MessageOutput}, {Message="String 3", Type=Enum.MessageType.MessageOutput}, {Message="", Type=Enum.MessageType.MessageOutput}}, "Stored output is incorrect.")
     self:AssertEquals(OutputLabels[1].Text, "", "Text is incorrect.")
     self:AssertEquals(OutputLabels[2].Text, "String 1", "Text is incorrect.")
     self:AssertEquals(OutputLabels[3].Text, "String 2", "Text is incorrect.")
@@ -167,7 +167,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("SetTest"):SetRun(funct
     self.CuT:SetTest(Test1)
     Test1:OutputMessage(Enum.MessageType.MessageError, "String 1")
     Test1:OutputMessage(Enum.MessageType.MessageInfo, "String 2\nString 3")
-    self:AssertEquals(self.CuT.OutputLines, {{"String 1", Enum.MessageType.MessageError}, {"String 2", Enum.MessageType.MessageInfo}, {"String 3", Enum.MessageType.MessageInfo}}, "Stored output is incorrect.")
+    self:AssertEquals(self.CuT.OutputLines, {{Message="String 1", Type=Enum.MessageType.MessageError}, {Message="String 2", Type=Enum.MessageType.MessageInfo}, {Message="String 3", Type=Enum.MessageType.MessageInfo}}, "Stored output is incorrect.")
     self:AssertEquals(OutputLabels[1].Text, "String 1", "Text is incorrect.")
     self:AssertEquals(OutputLabels[2].Text, "String 2", "Text is incorrect.")
     self:AssertEquals(OutputLabels[3].Text, "String 3", "Text is incorrect.")
@@ -179,7 +179,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("SetTest"):SetRun(funct
 
     --Set a test with an existting output and assert the messages are displayed.
     self.CuT:SetTest(Test2)
-    self:AssertEquals(self.CuT.OutputLines, {{"String 4", Enum.MessageType.MessageOutput}, {"String 5", Enum.MessageType.MessageWarning}}, "Stored output is incorrect.")
+    self:AssertEquals(self.CuT.OutputLines, {{Message="String 4", Type=Enum.MessageType.MessageOutput}, {Message="String 5", Type=Enum.MessageType.MessageWarning}}, "Stored output is incorrect.")
     self:AssertEquals(OutputLabels[1].Text, "String 4", "Text is incorrect.")
     self:AssertEquals(OutputLabels[2].Text, "String 5", "Text is incorrect.")
     self:AssertEquals(OutputLabels[3].Text, "", "Text is incorrect.")
@@ -190,7 +190,7 @@ NexusUnitTesting:RegisterUnitTest(OutputViewUnitTest.new("SetTest"):SetRun(funct
 
     --Send an output for a previous test and assert it wasn't added.
     Test1:OutputMessage(Enum.MessageType.MessageError, "Fail")
-    self:AssertEquals(self.CuT.OutputLines, {{"String 4", Enum.MessageType.MessageOutput}, {"String 5", Enum.MessageType.MessageWarning}}, "Stored output is incorrect.")
+    self:AssertEquals(self.CuT.OutputLines, {{Message="String 4", Type=Enum.MessageType.MessageOutput}, {Message="String 5", Type=Enum.MessageType.MessageWarning}}, "Stored output is incorrect.")
     self:AssertEquals(OutputLabels[1].Text, "String 4", "Text is incorrect.")
     self:AssertEquals(OutputLabels[2].Text, "String 5", "Text is incorrect.")
     self:AssertEquals(OutputLabels[3].Text, "", "Text is incorrect.")
