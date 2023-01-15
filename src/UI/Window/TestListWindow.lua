@@ -3,20 +3,27 @@ TheNexusAvenger
 
 Window for the list of tests and actions.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local TestListView = NexusUnitTestingPluginProject:GetResource("UI.Window.TestListView")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local OutputWindow = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("OutputWindow"))
+local TestListView = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("TestListView"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local TestListWindow = PluginInstance:Extend()
 TestListWindow:SetClassName("TestListWindow")
+
+export type TestListWindow = {
+    new: (Plugin: Plugin, OutputWindow: OutputWindow.OutputWindow) -> (TestListWindow),
+    Extend: (self: TestListWindow) -> (TestListWindow),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates a Test List Window object.
 --]]
-function TestListWindow:__new(Plugin, OutputWindow)
+function TestListWindow:__new(Plugin: Plugin, OutputWindow: OutputWindow.OutputWindow): ()
     PluginInstance.__new(self, Plugin:CreateDockWidgetPluginGui("Unit Tests", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Bottom, false, false, 300, 200, 200, 100)))
     self.Title = "Unit Tests"
     self.Name = "Unit Tests"
@@ -38,4 +45,4 @@ end
 
 
 
-return TestListWindow
+return (TestListWindow :: any) :: TestListWindow

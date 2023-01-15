@@ -3,9 +3,11 @@ TheNexusAvenger
 
 Icon for showing the state of a test.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent)
-local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
+local NexusUnitTestingPlugin = script.Parent.Parent
+local NexusUnitTesting = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local TEST_ICON_SPRITESHEET = "https://www.roblox.com/asset/?id=4595118527"
 local ICON_SIZE = Vector2.new(256, 256)
@@ -18,23 +20,30 @@ local ICON_POSITIONS = {
     [NexusUnitTesting.TestState.Skipped] = Vector2.new(0, 256),
 }
 local ICON_COLORS = {
-    [NexusUnitTesting.TestState.NotRun] = Color3.new(0, 170/255, 255/255),
-    [NexusUnitTesting.TestState.InProgress] = Color3.new(255/255, 150/255, 0),
-    [NexusUnitTesting.TestState.Passed] = Color3.new(0, 200/255, 0),
-    [NexusUnitTesting.TestState.Failed] = Color3.new(200/255, 0, 0),
-    [NexusUnitTesting.TestState.Skipped] = Color3.new(220/255, 220/255, 0),
+    [NexusUnitTesting.TestState.NotRun] = Color3.fromRGB(0, 170, 255),
+    [NexusUnitTesting.TestState.InProgress] = Color3.fromRGB(255, 150, 0),
+    [NexusUnitTesting.TestState.Passed] = Color3.fromRGB(0, 200, 0),
+    [NexusUnitTesting.TestState.Failed] = Color3.fromRGB(200, 0, 0),
+    [NexusUnitTesting.TestState.Skipped] = Color3.fromRGB(220, 220, 0),
 }
 
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
 local TestStateIcon = PluginInstance:Extend()
 TestStateIcon:SetClassName("TestStateIcon")
+
+export type TestStateIcon = {
+    new: () -> (TestStateIcon),
+    Extend: (self: TestStateIcon) -> (TestStateIcon),
+
+    TestState: string,
+    HasOutput: boolean,
+} & PluginInstance.PluginInstance & ImageLabel
 
 
 
 --[[
 Creates the Test State Icon.
 --]]
-function TestStateIcon:__new()
+function TestStateIcon:__new(): ()
     PluginInstance.__new(self, "ImageLabel")
 
     --Set up changing the test state.
@@ -73,4 +82,4 @@ end
 
 
 
-return TestStateIcon
+return (TestStateIcon :: any) :: TestStateIcon

@@ -3,21 +3,29 @@ TheNexusAvenger
 
 Frame for showing and selecting tests.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
-local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
-local CollapsableListFrame = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Input.Custom.CollapsableListFrame")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local TestStateIcon = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("TestStateIcon"))
+local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"))
+local CollapsableListFrame = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("Custom"):WaitForChild("CollapsableListFrame"))
 
 local TestListFrame = CollapsableListFrame:Extend()
 TestListFrame:SetClassName("TestListFrame")
+
+export type TestListFrame = {
+    new: () -> (TestListFrame),
+    Extend: (self: TestListFrame) -> (TestListFrame),
+
+    Update: (self: TestListFrame, Data: any) -> (),
+} & CollapsableListFrame.CollapsableListFrame
 
 
 
 --[[
 Creates a Test List Frame object.
 --]]
-function TestListFrame:__new()
+function TestListFrame:__new(): ()
     CollapsableListFrame.__new(self)
     self:DisableChangeReplication("TestListView")
 
@@ -52,7 +60,7 @@ end
 --[[
 Updates the value of the list frame.
 --]]
-function TestListFrame:Update(Data)
+function TestListFrame:Update(Data: any): ()
     CollapsableListFrame.Update(self, Data)
 
     --Update the test display.
@@ -71,4 +79,4 @@ end
 
 
 
-return TestListFrame
+return (TestListFrame :: any) :: TestListFrame

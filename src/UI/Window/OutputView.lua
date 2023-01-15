@@ -3,28 +3,38 @@ TheNexusAvenger
 
 Frame for viewing the output of a test.
 --]]
+--!strict
 
 local TEXT_MARGIN_PIXELS = 3
 local LINE_HEIGHT_PIXELS = 17
 
 
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
-local OutputTextEntry = NexusUnitTestingPluginProject:GetResource("UI.List.OutputTextEntry")
-
 local TextService = game:GetService("TextService")
+
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
+local OutputTextEntry = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("List"):WaitForChild("OutputTextEntry"))
+local UnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("UnitTest"):WaitForChild("UnitTest"))
 
 local OutputView = PluginInstance:Extend()
 OutputView:SetClassName("OutputView")
+
+export type OutputView = {
+    new: () -> (OutputView),
+    Extend: (self: OutputView) -> (OutputView),
+
+    AddOutput: (self: OutputView, String: string, Type: Enum.MessageType) -> (),
+    SetTest: (self: OutputView, Test: UnitTest.UnitTest) -> (),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates a Output View frame object.
 --]]
-function OutputView:__new()
+function OutputView:__new(): ()
     PluginInstance.__new(self, "Frame")
 
     --Store the output data.
@@ -86,9 +96,9 @@ end
 --[[
 Updates the displayed output.
 --]]
-function OutputView:UpdateDisplayedOutput()
+function OutputView:UpdateDisplayedOutput(): ()
     if #self.OutputLines == 0 then
-        self.ElementList:SetEntries({{Message="No Output"}})
+        self.ElementList:SetEntries({{Message = "No Output"}})
     else
         self.ElementList:SetEntries(self.OutputLines)
     end
@@ -97,10 +107,10 @@ end
 --[[
 Processes a new output entry.
 --]]
-function OutputView:ProcessOutput(String, Type)
+function OutputView:ProcessOutput(String: string, Type: Enum.MessageType): ()
     --If the string has multiple lines, split the string and add them.
     if string.find(String,"\n") then
-        for _,SubString in pairs(string.split(String,"\n")) do
+        for _,SubString in string.split(String,"\n") do
             self:AddOutput(SubString, Type)
         end
         return
@@ -119,7 +129,7 @@ end
 --[[
 Adds a line to display in the output.
 --]]
-function OutputView:AddOutput(String, Type)
+function OutputView:AddOutput(String: string, Type: Enum.MessageType)
     self:ProcessOutput(String, Type)
     self:UpdateDisplayedOutput()
 end
@@ -127,7 +137,7 @@ end
 --[[
 Sets the test to use for the output.
 --]]
-function OutputView:SetTest(Test)
+function OutputView:SetTest(Test: UnitTest.UnitTest): ()
     --Set the top bar name.
     self.TopBarLabel.Text = Test.Name
     if Test.FullName then
@@ -142,13 +152,13 @@ function OutputView:SetTest(Test)
     self.MaxLineWidth = 0
 
     --Disconnect the existing events.
-    for _,Event in pairs(self.TestEvents) do
+    for _,Event in self.TestEvents do
         Event:Disconnect()
     end
     self.TestEvents = {}
 
     --Add the existing output.
-    for _, Output in pairs(Test.Output) do
+    for _, Output in Test.Output :: {{Message: string, Type: Enum.MessageType}} do
         self:ProcessOutput(Output.Message, Output.Type)
     end
     self:UpdateDisplayedOutput()
@@ -161,4 +171,4 @@ end
 
 
 
-return OutputView
+return (OutputView :: any) :: OutputView

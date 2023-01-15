@@ -3,22 +3,32 @@ TheNexusAvenger
 
 Frame containing the buttons.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local RunTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunTestsButton")
-local RunFailedTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunFailedTestsButton")
-local RunSelectedTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunSelectedTestsButton")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local RunTestsButton = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Button"):WaitForChild("RunTestsButton"))
+local RunFailedTestsButton = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Button"):WaitForChild("RunFailedTestsButton"))
+local RunSelectedTestsButton = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Button"):WaitForChild("RunSelectedTestsButton"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local ButtonSideBar = PluginInstance:Extend()
 ButtonSideBar:SetClassName("ButtonSideBar")
+
+export type ButtonSideBar = {
+    new: () -> (ButtonSideBar),
+    Extend: (self: ButtonSideBar) -> (ButtonSideBar),
+
+    RunTestsButton: RunTestsButton.RunTestsButton,
+    RunFailedTestsButton: RunFailedTestsButton.RunFailedTestsButton,
+    RunSelectedTestsButton: RunSelectedTestsButton.RunSelectedTestsButton,
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates a Button Side Bar object.
 --]]
-function ButtonSideBar:__new()
+function ButtonSideBar:__new(): ()
     PluginInstance.__new(self, "Frame")
 
     --Create the buttons.
@@ -50,4 +60,4 @@ end
 
 
 
-return ButtonSideBar
+return (ButtonSideBar :: any) :: ButtonSideBar

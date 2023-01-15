@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Entry for the output.
 --]]
+--!strict
 
 local TEXT_MARGIN_PIXELS = 3
 local ENUMS_TO_COLORS = {
@@ -14,18 +15,25 @@ local ENUMS_TO_COLORS = {
 
 
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 
-local OutputView = PluginInstance:Extend()
-OutputView:SetClassName("OutputView")
+local OutputTextEntry = PluginInstance:Extend()
+OutputTextEntry:SetClassName("OutputView")
+
+export type OutputTextEntry = {
+    new: () -> (OutputTextEntry),
+    Extend: (self: OutputTextEntry) -> (OutputTextEntry),
+
+    Update: (self: OutputTextEntry, Data: {Message: string, Type: Enum.MessageType}?) -> (),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates the text entry.
 --]]
-function OutputView:__new()
+function OutputTextEntry:__new(): ()
     PluginInstance.__new(self, "Frame")
 
     --Create the text.
@@ -40,7 +48,7 @@ end
 --[[
 Updates the text.
 --]]
-function OutputView:Update(Data)
+function OutputTextEntry:Update(Data: {Message: string, Type: Enum.MessageType}?): ()
     if Data then
         self.TextLabel.Text = Data.Message
         if Data.Type then
@@ -57,4 +65,4 @@ end
 
 
 
-return OutputView
+return (OutputTextEntry :: any) :: OutputTextEntry

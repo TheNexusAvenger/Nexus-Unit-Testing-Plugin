@@ -3,20 +3,29 @@ TheNexusAvenger
 
 Window for the displaying the output of a test.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local OutputView = NexusUnitTestingPluginProject:GetResource("UI.Window.OutputView")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local OutputView = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("OutputView"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
+local UnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("UnitTest"):WaitForChild("UnitTest"))
 
 local OutputWindow = PluginInstance:Extend()
 OutputWindow:SetClassName("OutputWindow")
+
+export type OutputWindow = {
+    new: (Plugin: Plugin) -> (OutputWindow),
+    Extend: (self: OutputWindow) -> (OutputWindow),
+
+    SetTest: (self: OutputWindow, Test: UnitTest.UnitTest) -> (),
+} & PluginInstance.PluginInstance & DockWidgetPluginGui
 
 
 
 --[[
 Creates a Output Window object.
 --]]
-function OutputWindow:__new(Plugin)
+function OutputWindow:__new(Plugin: Plugin)
     PluginInstance.__new(self, Plugin:CreateDockWidgetPluginGui("Test Output", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Bottom, false, false, 300, 200, 200, 100)))
     self.Title = "Test Output"
     self.Name = "Test Output"
@@ -32,7 +41,7 @@ end
 --[[
 Sets the test to display.
 --]]
-function OutputWindow:SetTest(Test)
+function OutputWindow:SetTest(Test: UnitTest.UnitTest): ()
     self.Enabled = true
     self.OutputView:SetTest(Test)
 end

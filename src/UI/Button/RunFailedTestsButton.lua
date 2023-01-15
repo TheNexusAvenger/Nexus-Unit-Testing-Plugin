@@ -3,22 +3,28 @@ TheNexusAvenger
 
 Button for re-running failed tests.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local BUTTON_ICONS = "https://www.roblox.com/asset/?id=4734758315"
+
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local RunFailedTestsButton = PluginInstance:Extend()
 RunFailedTestsButton:SetClassName("RunFailedTestsButton")
 
-local BUTTON_ICONS = "https://www.roblox.com/asset/?id=4734758315"
+export type RunFailedTestsButton = {
+    new: () -> (RunFailedTestsButton),
+    Extend: (self: RunFailedTestsButton) -> (RunFailedTestsButton),
+} & PluginInstance.PluginInstance & ImageButton
 
 
 
 --[[
 Creates a Run Failed Tests Button object.
 --]]
-function RunFailedTestsButton:__new()
+function RunFailedTestsButton:__new(): ()
     PluginInstance.__new(self, "ImageButton")
 
     --Create the failed tests icon.
@@ -29,17 +35,17 @@ function RunFailedTestsButton:__new()
     Icon.Image = BUTTON_ICONS
     Icon.ImageRectSize = Vector2.new(512, 512)
     Icon.ImageRectOffset = Vector2.new(512, 0)
-    Icon.ImageColor3 = Color3.new(200/255, 0, 0)
+    Icon.ImageColor3 = Color3.fromRGB(200, 0, 0)
     Icon.Parent = self
 
     --Set the defaults.
     self.Image = BUTTON_ICONS
     self.ImageRectSize = Vector2.new(512, 512)
     self.BackgroundColor3 = Enum.StudioStyleGuideColor.MainBackground
-    self.ImageColor3 = Color3.new(0, 170/255, 0)
+    self.ImageColor3 = Color3.fromRGB(0, 170, 0)
     self.BorderSizePixel = 0
 end
 
 
 
-return RunFailedTestsButton
+return (RunFailedTestsButton :: any) :: RunFailedTestsButton

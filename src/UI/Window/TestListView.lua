@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Frame for the list of tests and actions.
 --]]
+--!strict
 
 local SERVICES_WITH_TESTS = {
     game:GetService("Workspace"),
@@ -25,26 +26,34 @@ local SERVICES_WITH_TESTS = {
 
 local TextService = game:GetService("TextService")
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local ButtonSideBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.ButtonSideBar")
-local TestProgressBar = NexusUnitTestingPluginProject:GetResource("UI.Bar.TestProgressBar")
-local TestListFrame = NexusUnitTestingPluginProject:GetResource("UI.List.TestListFrame")
-local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
-local TestFinder = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.Runtime.TestFinder")
-local ModuleUnitTest = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule.Runtime.ModuleUnitTest")
-local NexusEvent = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.NexusInstance.Event.NexusEvent")
-local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local ButtonSideBar = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Bar"):WaitForChild("ButtonSideBar"))
+local TestProgressBar = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("Bar"):WaitForChild("TestProgressBar"))
+local TestListFrame = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("List"):WaitForChild("TestListFrame"))
+local NexusUnitTesting = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"))
+local TestFinder = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("Runtime"):WaitForChild("TestFinder"))
+local UnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("UnitTest"):WaitForChild("UnitTest"))
+local ModuleUnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("Runtime"):WaitForChild("ModuleUnitTest"))
+local NexusEvent = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("NexusEvent"))
+local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local TestListView = PluginInstance:Extend()
 TestListView:SetClassName("TestListView")
+
+export type TestListView = {
+    new: () -> (TestListView),
+    Extend: (self: TestListView) -> (TestListView),
+
+    TestOutputOpened: NexusEvent.NexusEvent<UnitTest.UnitTest, boolean>,
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates a Test List Frame object.
 --]]
-function TestListView:__new()
+function TestListView:__new(): ()
     PluginInstance.__new(self, "Frame")
 
     --Create the state container for the tests.
@@ -59,7 +68,7 @@ function TestListView:__new()
     self:DisableChangeReplication("CurrentOutputTest")
 
     --Create the events.
-    self:DisableChangeReplication("TestOutputOpened",function() end)
+    self:DisableChangeReplication("TestOutputOpened")
     self.TestOutputOpened = NexusEvent.new()
 
     --Create the bars.
@@ -148,14 +157,14 @@ end
 --[[
 Updates the view of tests.
 --]]
-function TestListView:TestsUpdated()
+function TestListView:TestsUpdated(): ()
     --Set the element list.
     local Tests = self.Tests:GetDescendants()
     self.ElementList:SetEntries(Tests)
 
     --Update the max width.
     local MaxWidth = 100
-    for _, Entry in pairs(Tests) do
+    for _, Entry in Tests do
         MaxWidth = math.max(MaxWidth, (20 * (Entry.Indent - 1)) + Entry.EntryWidth)
     end
     self.ElementList.CurrentWidth = MaxWidth
@@ -164,12 +173,12 @@ end
 --[[
 Runs all of the detected tests.
 --]]
-function TestListView:RunAllTests()
+function TestListView:RunAllTests(): ()
     --Find the tests to run.
     local Tests = {}
     local Modules = {}
-    for _,Service in pairs(SERVICES_WITH_TESTS) do
-        for _,Test in pairs(TestFinder.GetTests(Service)) do
+    for _, Service in SERVICES_WITH_TESTS do
+        for _, Test in TestFinder.GetTests(Service) do
             table.insert(Tests, Test)
             Modules[Test.ModuleScript] = true
         end
@@ -177,7 +186,7 @@ function TestListView:RunAllTests()
 
     --Remove the non-existent tests.
     local EntriesToRemove = {}
-    for _, Entry in pairs(self.Tests.Children) do
+    for _, Entry in self.Tests.Children do
         local Test = Entry.Test
         if not Modules[Test.ModuleScript] then
             table.insert(EntriesToRemove, Entry)
@@ -203,15 +212,15 @@ function TestListView:RunFailedTests()
     --[[
     Return if a test contains a failed test.
     --]]
-    local function ContainsFailedTest(Test)
+    local function ContainsFailedTest(Test: UnitTest.UnitTest): boolean
         --Return true if the test failed.
         if Test.State == "FAILED" or Test.CombinedState == "FAILED" then
             return true
         end
 
         --Return if a subtest has a failure.
-        for _,SubTest in pairs(Test.SubTests) do
-            if ContainsFailedTest(SubTest) then
+        for _, SubTest in Test.SubTests :: {UnitTest.UnitTest} do
+            if ContainsFailedTest(SubTest :: any) then
                 return true
             end
         end
@@ -223,7 +232,7 @@ function TestListView:RunFailedTests()
     --Determine the ModuleScripts to rerun.
     local TestsToRerun = {}
     local EntriesToRemove = {}
-    for _, Entry in pairs(self.Tests.Children) do
+    for _, Entry in self.Tests.Children do
         local Test = Entry.Test
         if ContainsFailedTest(Test) then
             local ModuleScript = Test.ModuleScript
@@ -246,18 +255,18 @@ end
 Reruns the selected test. Runs all of the
 tests if tests were selected.
 --]]
-function TestListView:RunSelectedTests()
+function TestListView:RunSelectedTests(): ()
     --[[
     Returns if an entry is selected or a child is.
     --]]
-    local function EntryIsSelected(Entry)
+    local function EntryIsSelected(Entry: TestListFrame.TestListFrame): boolean
         --If the label is selected, return true.
         if Entry.Selected then
             return true
         end
 
         --Return true if a subtest is selected.
-        for _, SubEntry in pairs(Entry.Children) do
+        for _, SubEntry in Entry.Children do
             if EntryIsSelected(SubEntry) then
                 return true
             end
@@ -270,7 +279,7 @@ function TestListView:RunSelectedTests()
     --Determine the tests to rerun and the frames to remove.
     local EntriesToRemove = {}
     local TestsToRerun = {}
-    for _, Entry in pairs(self.Tests.Children) do
+    for _, Entry in self.Tests.Children do
         --Add the test to be removed if the module was removed.
         if EntryIsSelected(Entry) then
             local ModuleScript = Entry.Test.ModuleScript
@@ -298,12 +307,12 @@ end
 --[[
 Removes a list of test entries.
 --]]
-function TestListView:RemvoeEntries(Entries)
-    for _, Entry in pairs(Entries) do
+function TestListView:RemvoeEntries(Entries: {TestListFrame.TestListFrame}): ()
+    for _, Entry in Entries do
         self.TestProgressBar:RemoveUnitTest(Entry.Test, true)
         self.Tests:RemoveChild(Entry)
         self.ModuleScriptsToEntry[Entry.Test.ModuleScript] = nil
-        for _, Event in pairs(self.TestEvents[Entry.Test]) do
+        for _, Event in self.TestEvents[Entry.Test] do
             Event:Disconnect()
         end
         self.TestEvents[Entry.Test] = nil
@@ -313,7 +322,7 @@ end
 --[[
 Connects the events of a test.
 --]]
-function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
+function TestListView:ConnectTest(Test: UnitTest.UnitTest, Entry: TestListFrame.TestListFrame, RootTest: UnitTest.UnitTest, BaseFullName: string?): ()
     BaseFullName = BaseFullName or ""
 
     --Set up the event storage.
@@ -323,7 +332,7 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
     local Events = self.TestEvents[RootTest]
 
     --Set the full name.
-    local FullName = BaseFullName..Test.Name
+    local FullName = (BaseFullName :: string)..Test.Name
     Test.FullName = FullName
     Entry.DurationPosition = 22 + 4 + TextService:GetTextSize(Test.Name, 14, Enum.Font.SourceSans, Vector2.new(2000, 16)).X
     Entry.EntryWidth = Entry.DurationPosition
@@ -357,7 +366,7 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
             Entry.HasOutput = true
             if MessageOutputtedEvent then
                 MessageOutputtedEvent:Disconnect()
-                MessageOutputtedEvent = nil
+                MessageOutputtedEvent = nil :: any
             end
         end)
         table.insert(Events, MessageOutputtedEvent)
@@ -372,7 +381,7 @@ function TestListView:ConnectTest(Test, Entry, RootTest, BaseFullName)
     end)
 
     --Add the existing subtests.
-    for _, NewTest in pairs(Test.SubTests) do
+    for _, NewTest in Test.SubTests :: {UnitTest.UnitTest} do
         local NewEntry = Entry:CreateChild()
         NewEntry.Test = NewTest
         self:ConnectTest(NewTest, NewEntry, RootTest, FullName.." > ")
@@ -387,22 +396,22 @@ end
 --[[
 Runs a list of tests.
 --]]
-function TestListView:RunTests(Tests)
+function TestListView:RunTests(Tests: {UnitTest.UnitTest}): ()
     --Set the test time.
     self.TestProgressBar:SetTime()
 
     --Sort the tests.
     table.sort(Tests, function(TestA, TestB)
-        return TestA.Name < TestB.Name
+        return (TestA.Name :: string) < (TestB.Name :: string)
     end)
 
     --Register the tests.
-    for _, Test in pairs(Tests) do
+    for _, Test in Tests do
         self:RegisterTest(Test)
     end
 
     --Run the tests.
-    for _, Test in pairs(Tests) do
+    for _, Test in Tests do
         Test:RunTest()
         Test:RunSubtests()
     end
@@ -418,7 +427,7 @@ end
 --[[
 Registers a ModuleScript unit test.
 --]]
-function TestListView:RegisterTest(ModuleScriptTest)
+function TestListView:RegisterTest(ModuleScriptTest: ModuleUnitTest.ModuleUnitTest): ()
     --Remove the existing entry if it exists.
     if self.ModuleScriptsToEntry[ModuleScriptTest.ModuleScript] then
         local Entry = self.ModuleScriptsToEntry[ModuleScriptTest.ModuleScript]
@@ -444,4 +453,4 @@ end
 
 
 
-return TestListView
+return (TestListView :: TestListView) :: any

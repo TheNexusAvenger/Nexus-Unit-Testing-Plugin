@@ -3,22 +3,33 @@ TheNexusAvenger
 
 Frame containing the progress of the tests.
 --]]
+--!strict
 
-local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
-local TestStateIcon = NexusUnitTestingPluginProject:GetResource("UI.TestStateIcon")
-local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
-local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
-local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
+local NexusUnitTestingPlugin = script.Parent.Parent.Parent
+local TestStateIcon = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("TestStateIcon"))
+local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"))
+local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
+local NexusUnitTesting = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"))
+local UnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("UnitTest"):WaitForChild("UnitTest"))
 
 local TestProgressBar = PluginInstance:Extend()
 TestProgressBar:SetClassName("TestProgressBar")
+
+export type TestProgressBar = {
+    new: () -> (TestProgressBar),
+    Extend: (self: TestProgressBar) -> (TestProgressBar),
+
+    SetTime: (self: TestProgressBar, Hours: number?, Minutes: number?, Seconds: number?) -> (),
+    AddUnitTest: (self: TestProgressBar, UnitTest: UnitTest.UnitTest, DontUpdateBar: boolean?) -> (),
+    RemoveUnitTest: (Uself: TestProgressBar, nitTest: UnitTest.UnitTest, DontUpdateBar: boolean?) -> (),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates a Test Progress Bar object.
 --]]
-function TestProgressBar:__new()
+function TestProgressBar:__new(): ()
     PluginInstance.__new(self, "Frame")
 
     --Store the tests.
@@ -87,10 +98,10 @@ end
 --[[
 Updates the progress bar.
 --]]
-function TestProgressBar:UpdateProgressBar()
+function TestProgressBar:UpdateProgressBar(): ()
     --Determinee the amount of each type.
     local TotalTests, InProgressTests, PassedTests, FailedTests, SkippedTests = 0, 0, 0, 0, 0
-    for _,Test in pairs(self.Tests) do
+    for _, Test in self.Tests do
         TotalTests = TotalTests + 1
 
         if Test.State == NexusUnitTesting.TestState.Passed then
@@ -133,27 +144,24 @@ end
 Updates the time text of the test.
 Does not update the text automatically.
 --]]
-function TestProgressBar:SetTime(Hours, Minutes, Seconds)
+function TestProgressBar:SetTime(Hours: number?, Minutes: number?, Seconds: number?): ()
     --Set the time if it isn't set.
     if not Hours and not Minutes and not Seconds then
-        local CurrentTime = os.date("*t", tick())
+        local CurrentTime = os.date("*t", tick()) :: any
         Hours, Minutes, Seconds = CurrentTime.hour, CurrentTime.min, CurrentTime.sec
     elseif Hours and not Minutes and not Seconds then
-        local CurrentTime = os.date("*t", Hours)
+        local CurrentTime = os.date("*t", Hours) :: any
         Hours, Minutes, Seconds = CurrentTime.hour, CurrentTime.min, CurrentTime.sec
     end
 
     --Format and set the time.
-    Hours = tostring(Hours)
-    Minutes = string.format("%02d", Minutes)
-    Seconds = string.format("%02d", Seconds)
-    self.TimeText = "[Started at "..Hours..":"..Minutes..":"..Seconds.."]"
+    self.TimeText = string.format("[Started at %d:%02d:%02d]", Hours :: number, Minutes :: number, Seconds :: number)
 end
 
 --[[
 Adds a unit test to track.
 --]]
-function TestProgressBar:AddUnitTest(UnitTest, DontUpdateBar)
+function TestProgressBar:AddUnitTest(UnitTest: UnitTest.UnitTest, DontUpdateBar: boolean?): ()
     --Store the test.
     table.insert(self.Tests, UnitTest)
 
@@ -168,7 +176,7 @@ function TestProgressBar:AddUnitTest(UnitTest, DontUpdateBar)
     end))
 
     --Add the subtests.
-    for _,SubUnitTest in pairs(UnitTest.SubTests) do
+    for _,SubUnitTest in UnitTest.SubTests :: {UnitTest.UnitTest} do
         self:AddUnitTest(SubUnitTest,true)
     end
 
@@ -181,9 +189,9 @@ end
 --[[
 Removes a unit test to track.
 --]]
-function TestProgressBar:RemoveUnitTest(UnitTest, DontUpdateBar)
+function TestProgressBar:RemoveUnitTest(UnitTest: UnitTest.UnitTest, DontUpdateBar: boolean?): ()
     --Remove the unit test.
-    for i,Test in pairs(self.Tests) do
+    for i,Test in self.Tests do
         if Test == UnitTest then
             table.remove(self.Tests, i)
             break
@@ -191,12 +199,12 @@ function TestProgressBar:RemoveUnitTest(UnitTest, DontUpdateBar)
     end
 
     --Disconnect the events.
-    for _,Connection in pairs(self.TestEvents[UnitTest] or {}) do
+    for _,Connection in self.TestEvents[UnitTest] or {} do
         Connection:Disconnect()
     end
 
     --Remove the subtests.
-    for _,SubUnitTest in pairs(UnitTest.SubTests) do
+    for _,SubUnitTest in UnitTest.SubTests :: {UnitTest.UnitTest} do
         self:RemoveUnitTest(SubUnitTest, true)
     end
 
@@ -208,4 +216,4 @@ end
 
 
 
-return TestProgressBar
+return (TestProgressBar :: any) :: TestProgressBar
