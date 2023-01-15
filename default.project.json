@@ -7,9 +7,6 @@
         },
         "NexusPluginComponents": {
             "$path": "module/Nexus-Plugin-Components/"
-        },
-        "NexusProject": {
-            "$path": "module/Nexus-Project/"
         }
     }
 }

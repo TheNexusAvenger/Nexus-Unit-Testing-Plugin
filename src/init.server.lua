@@ -5,10 +5,9 @@ Runs the Nexus Unit Testing Plugin.
 --]]
 --!strict
 
-local NexusUnitTestingPluginProject = script.Parent
-local PluginToggleButton = require(NexusUnitTestingPluginProject:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("Custom"):WaitForChild("PluginToggleButton"))
-local TestListWindow = require(NexusUnitTestingPluginProject:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("TestListWindow"))
-local OutputWindow = require(NexusUnitTestingPluginProject:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("OutputWindow"))
+local PluginToggleButton = require(script:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("Custom"):WaitForChild("PluginToggleButton"))
+local TestListWindow = require(script:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("TestListWindow"))
+local OutputWindow = require(script:WaitForChild("UI"):WaitForChild("Window"):WaitForChild("OutputWindow"))
 
 
 
