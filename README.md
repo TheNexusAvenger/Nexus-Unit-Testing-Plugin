@@ -12,13 +12,12 @@ to be able to fund the project. Consider supporting.
 <br>https://thenexusavenger.itch.io/nexus-unit-testing-plugin
 
 ### Roblox Plugin Marketplace
-*This version is currently not maintained.*
-<br>The plugin can be found on the Plugin Marketplace.
-<br>https://www.roblox.com/library/4735386072/Nexus-Unit-Testing-Plugin
+The plugin can be found on the Plugin Marketplace.
+<br>https://www.roblox.com/library/11039022908/Nexus-Unit-Testing-Plugin
 
-### Rojo / Nexus Git
+### Rojo
 This repository can be synced into Roblox Studio using 
-[Rojo (0.5 or newer)](https://github.com/rojo-rbx/rojo).
+[Rojo](https://github.com/rojo-rbx/rojo).
 Look at the respective repository for how to use them.
 
 ## License
