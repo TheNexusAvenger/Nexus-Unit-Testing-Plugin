@@ -11,7 +11,7 @@ local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginCom
 local RunSelecteedTestsButton = PluginInstance:Extend()
 RunSelecteedTestsButton:SetClassName("RunSelectedTestsButton")
 
-local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
+local BUTTON_ICONS = "https://www.roblox.com/asset/?id=4734758315"
 
 
 

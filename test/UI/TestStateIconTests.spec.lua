@@ -3,86 +3,69 @@ TheNexusAvenger
 
 Tests the TestStateIcon class.
 --]]
+--!strict
 
-local NexusUnitTesting = require("NexusUnitTesting")
+local NexusUnitTestingPlugin = game:GetService("ReplicatedStorage"):WaitForChild("NexusUnitTestingPlugin")
+local TestStateIcon = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("TestStateIcon"))
 
-local NexusUnitTestingPlugin = require(game:GetService("ReplicatedStorage"):WaitForChild("NexusUnitTestingPlugin"))
-local TestStateIcon = NexusUnitTestingPlugin:GetResource("UI.TestStateIcon")
+return function()
+    local TestTestStateIcon = nil
+    beforeEach(function()
+        TestTestStateIcon = TestStateIcon.new()
+    end)
+    afterEach(function()
+        TestTestStateIcon:Destroy()
+    end)
 
-local TestStateIconUnitTest = NexusUnitTesting.UnitTest:Extend()
+    describe("A test state icon", function()
+        it("should update based on the test state.", function()
+            --Assert the icon is correct.
+            expect(TestTestStateIcon.TestState).to.equal("NOTRUN")
+            expect(TestTestStateIcon.Image).to.equal("https://www.roblox.com/asset/?id=4595118527")
+            expect(TestTestStateIcon.ImageColor3).to.equal(Color3.fromRGB(0, 170, 255))
+            expect(TestTestStateIcon.ImageRectSize).to.equal(Vector2.new(256, 256))
+            expect(TestTestStateIcon.ImageRectOffset).to.equal(Vector2.new(0, 0))
 
+            --Set the test as in progress and assert it is correct.
+            TestTestStateIcon.TestState = "INPROGRESS"
+            expect(TestTestStateIcon.Image).to.equal("https://www.roblox.com/asset/?id=4595118527")
+            expect(TestTestStateIcon.ImageColor3).to.equal(Color3.fromRGB(255, 150, 0))
+            expect(TestTestStateIcon.ImageRectSize).to.equal(Vector2.new(256, 256))
+            expect(TestTestStateIcon.ImageRectOffset).to.equal(Vector2.new(256, 0))
 
+            --Set the test as passed and assert it is correct.
+            TestTestStateIcon.TestState = "PASSED"
+            expect(TestTestStateIcon.Image).to.equal("https://www.roblox.com/asset/?id=4595118527")
+            expect(TestTestStateIcon.ImageColor3).to.equal(Color3.fromRGB(0, 200, 0))
+            expect(TestTestStateIcon.ImageRectSize).to.equal(Vector2.new(256, 256))
+            expect(TestTestStateIcon.ImageRectOffset).to.equal(Vector2.new(512, 0))
 
---[[
-Sets up the test.
---]]
-function TestStateIconUnitTest:Setup()
-    self.CuT = TestStateIcon.new()
+            --Set the test as failed and assert it is correct.
+            TestTestStateIcon.TestState = "FAILED"
+            expect(TestTestStateIcon.Image).to.equal("https://www.roblox.com/asset/?id=4595118527")
+            expect(TestTestStateIcon.ImageColor3).to.equal(Color3.fromRGB(200, 0, 0))
+            expect(TestTestStateIcon.ImageRectSize).to.equal(Vector2.new(256, 256))
+            expect(TestTestStateIcon.ImageRectOffset).to.equal(Vector2.new(768, 0))
+
+            --Set the test as failed and skipped it is correct.
+            TestTestStateIcon.TestState = "SKIPPED"
+            expect(TestTestStateIcon.Image).to.equal("https://www.roblox.com/asset/?id=4595118527")
+            expect(TestTestStateIcon.ImageColor3).to.equal(Color3.fromRGB(220, 220, 0))
+            expect(TestTestStateIcon.ImageRectSize).to.equal(Vector2.new(256, 256))
+            expect(TestTestStateIcon.ImageRectOffset).to.equal(Vector2.new(0, 256))
+        end)
+
+        it("should update the output indicator", function()
+            --Assert the indicator isn't visible by default.
+            expect(TestTestStateIcon.OutputIndicator.Visible).to.equal(false)
+
+            --Set that there is output and assert the indicator is visible.
+            TestTestStateIcon.HasOutput = true
+            expect(TestTestStateIcon.OutputIndicator.Visible).to.equal(true)
+            
+            --Set that there is not output and assert the indicator is not visible.
+            TestTestStateIcon.HasOutput = false
+            expect(TestTestStateIcon.OutputIndicator.Visible).to.equal(false)
+        end)
+    end)
 end
-
---[[
-Tears down the test.
---]]
-function TestStateIconUnitTest:Teardown()
-    self.CuT:Destroy()
-end
-
---[[
-Tests setting the TestState.
---]]
-NexusUnitTesting:RegisterUnitTest(TestStateIconUnitTest.new("TestState"):SetRun(function(self)
-    --Assert the component under testing is correct.
-    self:AssertEquals(self.CuT.TestState, "NOTRUN", "Test state is incorrect.")
-    self:AssertEquals(self.CuT.Image, "http://www.roblox.com/asset/?id=4595118527", "Image is incorrect.")
-    self:AssertEquals(self.CuT.ImageColor3, Color3.new(0, 170/255, 255/255), "Color is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectSize, Vector2.new(256, 256), "Spritesheet image size is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectOffset, Vector2.new(0, 0), "Spritesheet image position is incorrect.")
-
-    --Set the test as in progress and assert it is correct.
-    self.CuT.TestState = "INPROGRESS"
-    self:AssertEquals(self.CuT.Image, "http://www.roblox.com/asset/?id=4595118527", "Image is incorrect.")
-    self:AssertEquals(self.CuT.ImageColor3, Color3.new(255/255, 150/255, 0), "Color is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectSize, Vector2.new(256, 256), "Spritesheet image size is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectOffset, Vector2.new(256, 0), "Spritesheet image position is incorrect.")
-
-    --Set the test as passed and assert it is correct.
-    self.CuT.TestState = "PASSED"
-    self:AssertEquals(self.CuT.Image, "http://www.roblox.com/asset/?id=4595118527", "Image is incorrect.")
-    self:AssertEquals(self.CuT.ImageColor3, Color3.new(0, 200/255, 0), "Color is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectSize, Vector2.new(256, 256), "Spritesheet image size is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectOffset, Vector2.new(512, 0), "Spritesheet image position is incorrect.")
-
-    --Set the test as failed and assert it is correct.
-    self.CuT.TestState = "FAILED"
-    self:AssertEquals(self.CuT.Image, "http://www.roblox.com/asset/?id=4595118527", "Image is incorrect.")
-    self:AssertEquals(self.CuT.ImageColor3, Color3.new(200/255, 0, 0), "Color is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectSize, Vector2.new(256, 256), "Spritesheet image size is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectOffset, Vector2.new(768, 0), "Spritesheet image position is incorrect.")
-
-    --Set the test as failed and skipped it is correct.
-    self.CuT.TestState = "SKIPPED"
-    self:AssertEquals(self.CuT.Image, "http://www.roblox.com/asset/?id=4595118527", "Image is incorrect.")
-    self:AssertEquals(self.CuT.ImageColor3, Color3.new(220/255, 220/255, 0), "Color is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectSize, Vector2.new(256, 256), "Spritesheet image size is incorrect.")
-    self:AssertEquals(self.CuT.ImageRectOffset, Vector2.new(0, 256), "Spritesheet image position is incorrect.")
-end))
-
---[[
-Tests setting the HasOutput.
---]]
-NexusUnitTesting:RegisterUnitTest(TestStateIconUnitTest.new("HasOutput"):SetRun(function(self)
-    --Assert the indicator isn't visible by default.
-    self:AssertFalse(self.CuT.OutputIndicator.Visible, "Indicator is visible.")
-
-    --Set that there is output and assert the indicator is visible.
-    self.CuT.HasOutput = true
-    self:AssertTrue(self.CuT.OutputIndicator.Visible, "Indicator is not visible.")
-
-    --Set that there is not output and assert the indicator is not visible.
-    self.CuT.HasOutput = false
-    self:AssertFalse(self.CuT.OutputIndicator.Visible, "Indicator is visible.")
-end))
-
-
-
-return true

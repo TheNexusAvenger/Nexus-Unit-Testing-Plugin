@@ -7,7 +7,7 @@ Icon for showing the state of a test.
 local NexusUnitTestingPluginProject = require(script.Parent.Parent)
 local NexusUnitTesting = NexusUnitTestingPluginProject:GetResource("NexusUnitTestingModule")
 
-local TEST_ICON_SPRITESHEET = "http://www.roblox.com/asset/?id=4595118527"
+local TEST_ICON_SPRITESHEET = "https://www.roblox.com/asset/?id=4595118527"
 local ICON_SIZE = Vector2.new(256, 256)
 
 local ICON_POSITIONS = {
