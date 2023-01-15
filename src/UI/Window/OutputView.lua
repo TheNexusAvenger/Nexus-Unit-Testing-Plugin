@@ -25,7 +25,7 @@ OutputView:SetClassName("OutputView")
 Creates a Output View frame object.
 --]]
 function OutputView:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Store the output data.
     self:DisableChangeReplication("OutputLines")

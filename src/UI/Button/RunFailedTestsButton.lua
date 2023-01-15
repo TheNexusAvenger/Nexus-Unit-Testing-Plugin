@@ -6,8 +6,9 @@ Button for re-running failed tests.
 
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
+local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
 
-local RunFailedTestsButton = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance"):Extend()
+local RunFailedTestsButton = PluginInstance:Extend()
 RunFailedTestsButton:SetClassName("RunFailedTestsButton")
 
 local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
@@ -18,7 +19,7 @@ local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
 Creates a Run Failed Tests Button object.
 --]]
 function RunFailedTestsButton:__new()
-    self:InitializeSuper("ImageButton")
+    PluginInstance.__new(self, "ImageButton")
 
     --Create the failed tests icon.
     local Icon = NexusPluginComponents.new("ImageLabel")

@@ -18,7 +18,7 @@ TestListFrame:SetClassName("TestListFrame")
 Creates a Test List Frame object.
 --]]
 function TestListFrame:__new()
-    self:InitializeSuper()
+    CollapsableListFrame.__new(self)
     self:DisableChangeReplication("TestListView")
 
     --Create the icon.
@@ -53,7 +53,7 @@ end
 Updates the value of the list frame.
 --]]
 function TestListFrame:Update(Data)
-    self.super:Update(Data)
+    CollapsableListFrame.Update(self, Data)
 
     --Update the test display.
     local Test = Data and Data.Test

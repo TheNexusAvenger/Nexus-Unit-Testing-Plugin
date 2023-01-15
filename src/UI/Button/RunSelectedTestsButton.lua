@@ -6,8 +6,9 @@ Button for re-running selected tests.
 
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local NexusPluginComponents = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents")
+local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
 
-local RunSelecteedTestsButton = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance"):Extend()
+local RunSelecteedTestsButton = PluginInstance:Extend()
 RunSelecteedTestsButton:SetClassName("RunSelectedTestsButton")
 
 local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
@@ -18,7 +19,7 @@ local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
 Creates a Run Selected Tests Button object.
 --]]
 function RunSelecteedTestsButton:__new()
-    self:InitializeSuper("ImageButton")
+    PluginInstance.__new(self, "ImageButton")
 
     --Create the selected tests icon.
     local Icon = NexusPluginComponents.new("ImageLabel")

@@ -35,7 +35,7 @@ TestStateIcon:SetClassName("TestStateIcon")
 Creates the Test State Icon.
 --]]
 function TestStateIcon:__new()
-    self:InitializeSuper("ImageLabel")
+    PluginInstance.__new(self, "ImageLabel")
 
     --Set up changing the test state.
     self:DisableChangeReplication("TestState")

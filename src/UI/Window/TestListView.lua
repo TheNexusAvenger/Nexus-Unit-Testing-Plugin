@@ -45,7 +45,7 @@ TestListView:SetClassName("TestListView")
 Creates a Test List Frame object.
 --]]
 function TestListView:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Create the state container for the tests.
     self:DisableChangeReplication("Tests")

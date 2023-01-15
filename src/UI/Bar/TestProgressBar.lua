@@ -19,7 +19,7 @@ TestProgressBar:SetClassName("TestProgressBar")
 Creates a Test Progress Bar object.
 --]]
 function TestProgressBar:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Store the tests.
     self:DisableChangeReplication("TimeText")

@@ -5,8 +5,9 @@ Button for running tests.
 --]]
 
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
+local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
 
-local RunTestsButton = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance"):Extend()
+local RunTestsButton = PluginInstance:Extend()
 RunTestsButton:SetClassName("RunTestsButton")
 
 local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
@@ -17,7 +18,7 @@ local BUTTON_ICONS = "http://www.roblox.com/asset/?id=4734758315"
 Creates a Run Tests Button object.
 --]]
 function RunTestsButton:__new(Test)
-    self:InitializeSuper("ImageButton")
+    PluginInstance.__new(self, "ImageButton")
 
     --Set the defaults.
     self.Image = BUTTON_ICONS

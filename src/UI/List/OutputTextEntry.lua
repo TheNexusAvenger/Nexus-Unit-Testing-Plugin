@@ -26,7 +26,7 @@ OutputView:SetClassName("OutputView")
 Creates the text entry.
 --]]
 function OutputView:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Create the text.
     local TextLabel = PluginInstance.new("TextLabel")

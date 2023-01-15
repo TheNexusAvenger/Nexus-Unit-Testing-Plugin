@@ -6,8 +6,9 @@ Window for the list of tests and actions.
 
 local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local TestListView = NexusUnitTestingPluginProject:GetResource("UI.Window.TestListView")
+local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
 
-local TestListWindow = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance"):Extend()
+local TestListWindow = PluginInstance:Extend()
 TestListWindow:SetClassName("TestListWindow")
 
 
@@ -16,7 +17,7 @@ TestListWindow:SetClassName("TestListWindow")
 Creates a Test List Window object.
 --]]
 function TestListWindow:__new(Plugin, OutputWindow)
-    self:InitializeSuper(Plugin:CreateDockWidgetPluginGui("Unit Tests", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Bottom, false, false, 300, 200, 200, 100)))
+    PluginInstance.__new(self, Plugin:CreateDockWidgetPluginGui("Unit Tests", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Bottom, false, false, 300, 200, 200, 100)))
     self.Title = "Unit Tests"
     self.Name = "Unit Tests"
 

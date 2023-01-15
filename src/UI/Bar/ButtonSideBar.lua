@@ -8,8 +8,9 @@ local NexusUnitTestingPluginProject = require(script.Parent.Parent.Parent)
 local RunTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunTestsButton")
 local RunFailedTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunFailedTestsButton")
 local RunSelectedTestsButton = NexusUnitTestingPluginProject:GetResource("UI.Button.RunSelectedTestsButton")
+local PluginInstance = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance")
 
-local ButtonSideBar = NexusUnitTestingPluginProject:GetResource("NexusPluginComponents.Base.PluginInstance"):Extend()
+local ButtonSideBar = PluginInstance:Extend()
 ButtonSideBar:SetClassName("ButtonSideBar")
 
 
@@ -18,7 +19,7 @@ ButtonSideBar:SetClassName("ButtonSideBar")
 Creates a Button Side Bar object.
 --]]
 function ButtonSideBar:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Create the buttons.
     local RunTests = RunTestsButton.new()
