@@ -413,7 +413,6 @@ function TestListView:RunTests(Tests: {UnitTest.UnitTest}): ()
     --Run the tests.
     for _, Test in Tests do
         Test:RunTest()
-        Test:RunSubtests()
     end
 
     --Update the bar if there is no tests.
