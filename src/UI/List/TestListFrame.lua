@@ -14,10 +14,11 @@ local TestListFrame = CollapsableListFrame:Extend()
 TestListFrame:SetClassName("TestListFrame")
 
 export type TestListFrame = {
-    new: () -> (TestListFrame),
+    GuiInstance: GuiObject,
+    new: (InitialIndex: number, InitialData: any) -> (TestListFrame),
     Extend: (self: TestListFrame) -> (TestListFrame),
 
-    Update: (self: TestListFrame, Data: any) -> (),
+    Update: (self: TestListFrame, Index: number, Data: any) -> (),
 } & CollapsableListFrame.CollapsableListFrame
 
 
@@ -25,7 +26,7 @@ export type TestListFrame = {
 --[[
 Creates a Test List Frame object.
 --]]
-function TestListFrame:__new(): ()
+function TestListFrame:__new(InitialIndex: number, InitialData: any): ()
     CollapsableListFrame.__new(self)
     self:DisableChangeReplication("TestListView")
 
@@ -55,12 +56,17 @@ function TestListFrame:__new(): ()
 
     --Set the defaults.
     self.Size = UDim2.new(1, 0, 0, 20)
+
+    --Set the initial data.
+    self:DisableChangeReplication("GuiInstance")
+    self.GuiInstance = self
+    self:Update(InitialIndex, InitialData)
 end
 
 --[[
 Updates the value of the list frame.
 --]]
-function TestListFrame:Update(Data: any): ()
+function TestListFrame:Update(Index: number, Data: any): ()
     CollapsableListFrame.Update(self, Data)
 
     --Update the test display.

@@ -17,6 +17,7 @@ local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("Nexus
 local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
 local OutputTextEntry = require(NexusUnitTestingPlugin:WaitForChild("UI"):WaitForChild("List"):WaitForChild("OutputTextEntry"))
 local UnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTestingModule"):WaitForChild("UnitTest"):WaitForChild("UnitTest"))
+local NexusVirtualList = require(NexusUnitTestingPlugin:WaitForChild("NexusVirtualList"))
 
 local OutputView = PluginInstance:Extend()
 OutputView:SetClassName("OutputView")
@@ -76,21 +77,22 @@ function OutputView:__new(): ()
     self:DisableChangeReplication("ScrollingFrame")
     self.ScrollingFrame = ScrollingFrame
 
-    local ElementList = NexusPluginComponents.new("ElementList", OutputTextEntry)
-    ElementList.EntryHeight = LINE_HEIGHT_PIXELS
-    ElementList:ConnectScrollingFrame(ScrollingFrame)
-    self:DisableChangeReplication("ElementList")
-    self.ElementList = ElementList
+    local VirtualList = NexusVirtualList.CreateVirtualScrollList(ScrollingFrame, OutputTextEntry.new)
+    VirtualList:SetEntryHeight(LINE_HEIGHT_PIXELS)
+    self:DisableChangeReplication("VirtualList")
+    self.VirtualList = VirtualList
 
     self:DisableChangeReplication("MaxLineWidth")
     self:GetPropertyChangedSignal("MaxLineWidth"):Connect(function()
-        ElementList.CurrentWidth = math.max(100, self.MaxLineWidth)
+        VirtualList:SetScrollWidth(UDim.new(0, math.max(100, self.MaxLineWidth)))
     end)
     self.MaxLineWidth = 0
 
     --Set the defaults.
+    self:DisableChangeReplication("GuiInstance")
+    self.GuiInstance = self
     self.Size = UDim2.new(1, 0, 1, 0)
-    self.ElementList:SetEntries({{Message="No Test Selected"}})
+    self.VirtualList:SetData({{Message="No Test Selected"}})
 end
 
 --[[
@@ -98,9 +100,9 @@ Updates the displayed output.
 --]]
 function OutputView:UpdateDisplayedOutput(): ()
     if #self.OutputLines == 0 then
-        self.ElementList:SetEntries({{Message = "No Output"}})
+        self.VirtualList:SetData({{Message = "No Output"}})
     else
-        self.ElementList:SetEntries(self.OutputLines)
+        self.VirtualList:SetData(self.OutputLines)
     end
 end
 

@@ -37,6 +37,7 @@ local ModuleUnitTest = require(NexusUnitTestingPlugin:WaitForChild("NexusUnitTes
 local NexusEvent = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("NexusEvent"))
 local NexusPluginComponents = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"))
 local PluginInstance = require(NexusUnitTestingPlugin:WaitForChild("NexusPluginComponents"):WaitForChild("Base"):WaitForChild("PluginInstance"))
+local NexusVirtualList = require(NexusUnitTestingPlugin:WaitForChild("NexusVirtualList"))
 
 local TestListView = PluginInstance:Extend()
 TestListView:SetClassName("TestListView")
@@ -104,9 +105,9 @@ function TestListView:__new(): ()
     self:DisableChangeReplication("ScrollingFrame")
     self.ScrollingFrame = ScrollingFrame
 
-    local ElementList = NexusPluginComponents.new("ElementList", function()
+    local VirtualList = NexusVirtualList.CreateVirtualScrollList(ScrollingFrame, function(InitialIndex: number, InitialData: any)
         --Create the frame.
-        local Frame = TestListFrame.new()
+        local Frame = TestListFrame.new(InitialIndex, InitialData)
         Frame.SelectionList = self.Tests
         Frame.TestListView = self
 
@@ -121,10 +122,9 @@ function TestListView:__new(): ()
         --Return the frame.
         return Frame
     end)
-    ElementList.EntryHeight = 20
-    ElementList:ConnectScrollingFrame(ScrollingFrame)
-    self:DisableChangeReplication("ElementList")
-    self.ElementList = ElementList
+    VirtualList:SetEntryHeight(20)
+    self:DisableChangeReplication("VirtualList")
+    self.VirtualList = VirtualList
 
     --Connect the events.
     local DB = true
@@ -160,14 +160,14 @@ Updates the view of tests.
 function TestListView:TestsUpdated(): ()
     --Set the element list.
     local Tests = self.Tests:GetDescendants()
-    self.ElementList:SetEntries(Tests)
+    self.VirtualList:SetData(Tests)
 
     --Update the max width.
     local MaxWidth = 100
     for _, Entry in Tests do
         MaxWidth = math.max(MaxWidth, (20 * (Entry.Indent - 1)) + Entry.EntryWidth)
     end
-    self.ElementList.CurrentWidth = MaxWidth
+    self.VirtualList:SetScrollWidth(UDim.new(0, MaxWidth))
 end
 
 --[[

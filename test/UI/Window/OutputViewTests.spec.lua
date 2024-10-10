@@ -29,8 +29,8 @@ return function()
 
     local function GetLabels()
         local Entries = {}
-        for _, Entry in TestOutputView.ElementList.FrameEntries do
-            table.insert(Entries, Entry:GetChildren()[1])
+        for _, Entry in TestOutputView.ScrollingFrame:GetChildren() do
+            table.insert(Entries, Entry:FindFirstChildOfClass("TextLabel"))
         end
         return Entries
     end
@@ -44,22 +44,24 @@ return function()
             local OutputLabels = GetLabels()
             expect(OutputLabels[1].Text).to.equal("No Output")
             expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSansItalic)
-            expect(OutputLabels[2].Text).to.equal("")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[2]).to.equal(nil)
+            expect(OutputLabels[3]).to.equal(nil)
 
             --Set the output as having not enough lines and assert the text is correct.
             TestOutputView.OutputLines = {{Message = "String 1", Type = Enum.MessageType.MessageOutput}, {Message = "String 2", Type = Enum.MessageType.MessageWarning}}
             TestOutputView:UpdateDisplayedOutput()
+            OutputLabels = GetLabels()
             expect(OutputLabels[1].Text).to.equal("String 1")
             expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSans)
             expect(OutputLabels[2].Text).to.equal("String 2")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[3]).to.equal(nil)
             expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
             expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
 
             --Set the output as having more than enough lines and assert the text is correct.
             TestOutputView.OutputLines = {{Message = "String 1", Type = Enum.MessageType.MessageOutput}, {Message = "String 2", Type = Enum.MessageType.MessageWarning}, {Message = "String 3", Type = Enum.MessageType.MessageError}, {Message = "String 4", Type = Enum.MessageType.MessageInfo}, {Message = "String 5", Type = Enum.MessageType.MessageInfo}}
             TestOutputView:UpdateDisplayedOutput()
+            OutputLabels = GetLabels()
             expect(OutputLabels[1].Text).to.equal("String 1")
             expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSans)
             expect(OutputLabels[2].Text).to.equal("String 2")
@@ -67,42 +69,6 @@ return function()
             expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
             expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
             expect(OutputLabels[3].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.ErrorText)
-
-            --Set the canvas position as nearly scrolled and assert that the correct lines show.
-            TestOutputView.ScrollingFrame.CanvasPosition = Vector2.new(0, 10)
-            TestOutputView.OutputLines = {{Message = "String 1", Type = Enum.MessageType.MessageOutput}, {Message = "String 2", Type = Enum.MessageType.MessageWarning}, {Message = "String 3", Type = Enum.MessageType.MessageError}, {Message = "String 4", Type = Enum.MessageType.MessageInfo}, {Message = "String 5", Type = Enum.MessageType.MessageInfo}}
-            TestOutputView:UpdateDisplayedOutput()
-            expect(OutputLabels[1].Text).to.equal("String 1")
-            expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSans)
-            expect(OutputLabels[2].Text).to.equal("String 2")
-            expect(OutputLabels[3].Text).to.equal("String 3")
-            expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
-            expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
-            expect(OutputLabels[3].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.ErrorText)
-
-            --Set the canvas position as scrolled and assert that the correct lines show.
-            TestOutputView.ScrollingFrame.CanvasPosition = Vector2.new(0, 20)
-            TestOutputView.OutputLines = {{Message = "String 1", Type = Enum.MessageType.MessageOutput}, {Message = "String 2", Type = Enum.MessageType.MessageWarning}, {Message = "String 3", Type = Enum.MessageType.MessageError}, {Message = "String 4", Type = Enum.MessageType.MessageInfo}, {Message = "String 5", Type = Enum.MessageType.MessageInfo}}
-            TestOutputView:UpdateDisplayedOutput()
-            expect(OutputLabels[1].Text).to.equal("String 2")
-            expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSans)
-            expect(OutputLabels[2].Text).to.equal("String 3")
-            expect(OutputLabels[3].Text).to.equal("String 4")
-            expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
-            expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.ErrorText)
-            expect(OutputLabels[3].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.InfoText)
-
-            --Set the canvas position to the bottom and assert that the correct lines show.
-            TestOutputView.ScrollingFrame.CanvasPosition = Vector2.new(0, (17 * 5) - 50)
-            TestOutputView.OutputLines = {{Message = "String 1", Type = Enum.MessageType.MessageOutput}, {Message = "String 2", Type = Enum.MessageType.MessageWarning}, {Message = "String 3", Type = Enum.MessageType.MessageError}, {Message = "String 4", Type = Enum.MessageType.MessageInfo}, {Message = "String 5", Type = Enum.MessageType.MessageInfo}}
-            TestOutputView:UpdateDisplayedOutput()
-            expect(OutputLabels[1].Text).to.equal("String 3")
-            expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSans)
-            expect(OutputLabels[2].Text).to.equal("String 4")
-            expect(OutputLabels[3].Text).to.equal("String 5")
-            expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.ErrorText)
-            expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.InfoText)
-            expect(OutputLabels[3].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.InfoText)
         end)
 
         it("should add output entries.", function()
@@ -111,21 +77,23 @@ return function()
             local OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({{Message = "", Type = Enum.MessageType.MessageOutput}})
             expect(OutputLabels[1].Text).to.equal("")
-            expect(OutputLabels[2].Text).to.equal("")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[2]).to.equal(nil)
+            expect(OutputLabels[3]).to.equal(nil)
             expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
 
             --Add a string and assert the output is correct.
             TestOutputView:AddOutput("String 1", Enum.MessageType.MessageWarning)
+            OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({{Message = "" ,Type = Enum.MessageType.MessageOutput}, {Message = "String 1", Type = Enum.MessageType.MessageWarning}})
             expect(OutputLabels[1].Text).to.equal("")
             expect(OutputLabels[2].Text).to.equal("String 1")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[3]).to.equal(nil)
             expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
             expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
 
             --Add a string with a new line and assert the output is correct.
             TestOutputView:AddOutput("String 2\nString 3\n", Enum.MessageType.MessageOutput)
+            OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({{Message = "", Type = Enum.MessageType.MessageOutput}, {Message = "String 1", Type = Enum.MessageType.MessageWarning}, {Message = "String 2", Type = Enum.MessageType.MessageOutput}, {Message = "String 3", Type = Enum.MessageType.MessageOutput}, {Message = "", Type = Enum.MessageType.MessageOutput}})
             expect(OutputLabels[1].Text).to.equal("")
             expect(OutputLabels[2].Text).to.equal("String 1")
@@ -147,6 +115,7 @@ return function()
             TestOutputView:SetTest(Test1)
             Test1:OutputMessage(Enum.MessageType.MessageError, "String 1")
             Test1:OutputMessage(Enum.MessageType.MessageInfo, "String 2\nString 3")
+            OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({{Message = "String 1", Type = Enum.MessageType.MessageError}, {Message = "String 2", Type = Enum.MessageType.MessageInfo}, {Message = "String 3", Type = Enum.MessageType.MessageInfo}})
             expect(OutputLabels[1].Text).to.equal("String 1")
             expect(OutputLabels[2].Text).to.equal("String 2")
@@ -159,10 +128,11 @@ return function()
 
             --Set a test with an existting output and assert the messages are displayed.
             TestOutputView:SetTest(Test2)
+            OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({{Message = "String 4", Type = Enum.MessageType.MessageOutput}, {Message = "String 5", Type = Enum.MessageType.MessageWarning}})
             expect(OutputLabels[1].Text).to.equal("String 4")
             expect(OutputLabels[2].Text).to.equal("String 5")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[3]).to.equal(nil)
             expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
             expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
             expect(TestOutputView.TopBarLabel.Text).to.equal("Test 2")
@@ -170,20 +140,22 @@ return function()
 
             --Send an output for a previous test and assert it wasn't added.
             Test1:OutputMessage(Enum.MessageType.MessageError, "Fail")
+            OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({{Message = "String 4", Type = Enum.MessageType.MessageOutput}, {Message = "String 5", Type = Enum.MessageType.MessageWarning}})
             expect(OutputLabels[1].Text).to.equal("String 4")
             expect(OutputLabels[2].Text).to.equal("String 5")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[3]).to.equal(nil)
             expect(OutputLabels[1].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.MainText)
             expect(OutputLabels[2].TextColor3.ColorEnum).to.equal(Enum.StudioStyleGuideColor.WarningText)
 
             --Set a test with no existing output and assert the messages are displayed.
             TestOutputView:SetTest(Test3)
+            OutputLabels = GetLabels()
             expect(TestOutputView.OutputLines).to.deepEqual({})
             expect(OutputLabels[1].Text).to.equal("No Output")
             expect(OutputLabels[1].Font).to.equal(Enum.Font.SourceSansItalic)
-            expect(OutputLabels[2].Text).to.equal("")
-            expect(OutputLabels[3].Text).to.equal("")
+            expect(OutputLabels[2]).to.equal(nil)
+            expect(OutputLabels[3]).to.equal(nil)
             expect(TestOutputView.TopBarLabel.Text).to.equal("Test 3")
             expect(TestOutputView.TopBarFullNameLabel.Text).to.equal("")
         end)

@@ -22,10 +22,11 @@ local OutputTextEntry = PluginInstance:Extend()
 OutputTextEntry:SetClassName("OutputView")
 
 export type OutputTextEntry = {
-    new: () -> (OutputTextEntry),
+    GuiInstance: GuiObject,
+    new: (InitialIndex: number, InitialData: any) -> (OutputTextEntry),
     Extend: (self: OutputTextEntry) -> (OutputTextEntry),
 
-    Update: (self: OutputTextEntry, Data: {Message: string, Type: Enum.MessageType}?) -> (),
+    Update: (self: OutputTextEntry, Index: number, Data: {Message: string, Type: Enum.MessageType}?) -> (),
 } & PluginInstance.PluginInstance & Frame
 
 
@@ -33,7 +34,7 @@ export type OutputTextEntry = {
 --[[
 Creates the text entry.
 --]]
-function OutputTextEntry:__new(): ()
+function OutputTextEntry:__new(InitialIndex: number, InitialData: any): ()
     PluginInstance.__new(self, "Frame")
 
     --Create the text.
@@ -43,12 +44,17 @@ function OutputTextEntry:__new(): ()
     TextLabel.Parent = self
     self:DisableChangeReplication("TextLabel")
     self.TextLabel = TextLabel
+
+    --Set the initial data.
+    self:DisableChangeReplication("GuiInstance")
+    self.GuiInstance = self
+    self:Update(InitialIndex, InitialData)
 end
 
 --[[
 Updates the text.
 --]]
-function OutputTextEntry:Update(Data: {Message: string, Type: Enum.MessageType}?): ()
+function OutputTextEntry:Update(Index: number, Data: {Message: string, Type: Enum.MessageType}?): ()
     if Data then
         self.TextLabel.Text = Data.Message
         if Data.Type then
