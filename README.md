@@ -1,3 +1,5 @@
+**Nexus Unit Testing Plugin has been replaced with [Avant Plugin](https://github.com/Avant-Rbx/Avant-Plugin).**
+
 # Nexus Unit Testing Plugin
 Nexus Unit Testing Plugin provides a user interface
 for running tests with either [Nexus Unit Testing](https://github.com/thenexusavenger/nexus-unit-testing)
